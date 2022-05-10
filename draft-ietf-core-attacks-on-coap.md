@@ -14,8 +14,8 @@ pi: [toc, sortrefs, symrefs]
 
 author:
  -
-    ins: X. Y.
-    name: X Y
+    ins: TBD
+    name: TBD
     organization: TBD
     email: TBD
 
@@ -61,4 +61,4 @@ This document has no IANA actions.
 # Acknowledgments
 {:numbered="false"}
 
-TODO acknowledge. 
+TODO acknowledge.
