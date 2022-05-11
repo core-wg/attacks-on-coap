@@ -67,7 +67,7 @@ informative:
 venue:
   group: Constrained RESTful Environments (CoRE)
   mail: core@ietf.org
-  github: EricssonResearch/coap-actuators
+  github: core-wg/attacks-on-coap
 
 
 --- abstract
