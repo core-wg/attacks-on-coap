@@ -39,7 +39,7 @@ About This Document
    https://mailarchive.ietf.org/arch/browse/core/.
 
    Source for this draft and an issue tracker can be found at
-   https://github.com/EricssonResearch/coap-actuators.
+   https://github.com/core-wg/attacks-on-coap.
 
 Status of This Memo
 
