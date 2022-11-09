@@ -110,7 +110,7 @@ traditionally provided by security protocols are:
 
 * Data integrity checking
 
-* Replay protection
+* Data replay protection
 
 In this document we show that protecting CoAP with a security protocol on
 another layer is not nearly enough to securely control actuators (and in
