@@ -7,7 +7,7 @@ submissiontype: IETF
 pi:
   strict: 'yes'
   toc: 'yes'
-  tocdepth: '3'
+  tocdepth: 
   symrefs: 'yes'
   sortrefs: 'yes'
   compact: 'yes'
@@ -178,7 +178,7 @@ are made under the assumption that CoAP is already protected with a security
 protocol such as DTLS, TLS, or OSCORE, as an attacker otherwise can easily
 forge false requests and responses.
 
-##  The Block Attack
+##  The Blocking Attack
 
 An on-path attacker can block the delivery of any number of requests or responses.
 The attack can also be performed by an attacker jamming the lower layer radio
@@ -533,7 +533,7 @@ Following this updated processing mitigates the attack.
 
 ## The Request Fragment Rearrangement Attack {#fragment}
 
-These attack scenarios show that the Request Delay and Block Attacks can
+These attack scenarios show that the Request Delay and Blocking Attacks can
 be
 used against block-wise transfers to cause unauthorized operations to be
 performed on the server, and responses to unauthorized operations to be
