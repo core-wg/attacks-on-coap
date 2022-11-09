@@ -188,7 +188,7 @@ impossible or even infeasible. With DTLS and TLS, proxies can read
 the complete CoAP message, and with OSCORE, the CoAP header and several CoAP
 options are not encrypted. In all three security protocols, the IP-addresses,
 ports, and CoAP message lengths are available to all on-path attackers, which
-may be enough to determine the server, resource, and command.  The block
+may be enough to determine the server, resource, and command.  The blocking
 attack is illustrated in Figures {{blockreq}}{: format="counter"} and {{blockres}}{: format="counter"}.
 
 
