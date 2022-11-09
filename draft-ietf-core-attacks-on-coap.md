@@ -135,7 +135,7 @@ is the binding of data to an absolute or relative point in time and may in
 the relative case be referred to as freshness. The two last properties may
 be bundled together as "Data-to-spacetime binding".
 
-Freshness is a measure of when a message was sent on a timescale of
+Freshness (as defined in {{RFC9175}}) is a measure of when a message was sent on a timescale of
 the recipient.  A client or server that receives a message can either
 verify that the message is fresh or determine that it cannot be
 verified that the message is fresh.  What is considered fresh is
