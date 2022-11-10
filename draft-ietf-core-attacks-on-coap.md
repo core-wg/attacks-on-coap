@@ -98,10 +98,7 @@ protects CoAP end-to-end with the use of COSE {{RFC8152}} and the CoAP
 Object-Security option {{RFC8613}}, and can therefore be used over any
 transport.
 
-The Constrained Application Protocol (CoAP) {{RFC7252}} was designed
-with the assumption that security could be provided on a separate
-layer, in particular by using DTLS {{RFC6347}}. The four properties
-traditionally provided by security protocols are:
+The four properties traditionally provided by security protocols are:
 
 * Data confidentiality
 
@@ -111,8 +108,8 @@ traditionally provided by security protocols are:
 
 * Data replay protection
 
-In this document we show that protecting CoAP with a security protocol on
-another layer is not nearly enough to securely control actuators (and in
+In this document we show that protecting CoAP with a security protocol is
+not enough to securely control actuators (and in
 many cases sensors) and that secure operation often demands far more than
 the four properties traditionally provided by security protocols. We describe
 several serious attacks any on-path attacker (i.e., not only "trusted intermediaries")
