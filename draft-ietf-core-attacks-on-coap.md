@@ -7,7 +7,7 @@ submissiontype: IETF
 pi:
   strict: 'yes'
   toc: 'yes'
-  tocdepth: 
+  tocdepth: '3'
   symrefs: 'yes'
   sortrefs: 'yes'
   compact: 'yes'
