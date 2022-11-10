@@ -74,7 +74,7 @@ venue:
 Being able to securely read information from sensors, to securely control actuators, and
 to not enable distributed denial-of-service attacks are essential in a world of
 connected and networking things interacting with
-the physical world. This document summarizes a number of known attacks on CoAP and
+the physical world. Using a security protocol such as DTLS, TLS, or OSCORE to protect CoAP is a requirement for secure operation and protects against many attacks. This document summarizes a number of known attacks on CoAP deployments and
 show that just using CoAP with a security protocol like DTLS, TLS, or OSCORE is not
 enough for secure operation. Several of the
 discussed attacks can be mitigated with the solutions in RFC 9175.
@@ -95,7 +95,7 @@ The use of CoAP over UDP and DTLS is specified in {{RFC7252}} and the
 use of CoAP over TCP and TLS is specified in {{RFC8323}}. OSCORE
 protects CoAP end-to-end with the use of COSE {{RFC8152}} and the CoAP
 Object-Security option {{RFC8613}}, and can therefore be used over any
-transport.
+transport. Using a security protocol to protect CoAP is a requirement for secure operation and protects against many attacks. The CoAP NoSec mode does not provide any security as an attacker can easily eavesdrop on all messages and forge false requests and responses.
 
 The four properties traditionally provided by security protocols are:
 
@@ -103,7 +103,7 @@ The four properties traditionally provided by security protocols are:
 
 * Data origin authentication
 
-* Data integrity checking
+* Data integrity protection
 
 * Data replay protection
 
@@ -113,8 +113,10 @@ many cases sensors) and that secure operation often demands far more than
 the four properties traditionally provided by security protocols. We describe
 several serious attacks any on-path attacker (i.e., not only "trusted intermediaries")
 can do and discusses tougher requirements and mechanisms to mitigate the
-attacks. In general, secure operation of actuators also requires the three
+attacks. In general, secure operation also requires these four
 properties:
+
+* Availability
 
 * Data-to-data binding
 
@@ -122,6 +124,7 @@ properties:
 
 * Data-to-time binding
 
+Availability means that services and information must be available when needed.
 "Data-to-data binding" is e.g., binding of responses to a request or binding
 of data fragments to each other. "Data-to-space binding" is the binding of
 data to an absolute or relative point in space (i.e., a location) and may
@@ -146,6 +149,8 @@ OSCORE use sequence numbers for requests and some responses.
 Most OSCORE responses are bound to the request and therefore,
 enable the client to determine if the response is fresh or not.
 
+Some of the presented attacks such as the blocking attack, the
+request delay attack, and the relay attack are not specific to CoAP.
 The request delay attack (valid for DTLS, TLS, and OSCORE and
 described in {{reqdelay}}) lets an attacker control an actuator at a
 much later time than the client anticipated. The response delay and
