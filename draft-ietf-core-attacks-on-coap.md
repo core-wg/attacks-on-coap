@@ -53,7 +53,6 @@ author:
   org: Energy Harvesting Solutions
   email: c.amsuess@energyharvesting.at
 informative:
-  RFC6347:
   RFC7252:
   RFC7959:
   RFC8152:
