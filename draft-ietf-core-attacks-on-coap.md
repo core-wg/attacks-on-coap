@@ -78,8 +78,7 @@ connected and networking things interacting with
 the physical world. This document summarizes a number of known attacks on CoAP and
 show that just using CoAP with a security protocol like DTLS, TLS, or OSCORE is not
 enough for secure operation. Several of the
-discussed attacks can be mitigated with the solutions in
-draft-ietf-core-echo-request-tag.
+discussed attacks can be mitigated with the solutions in RFC 9175.
 
 --- middle
 
