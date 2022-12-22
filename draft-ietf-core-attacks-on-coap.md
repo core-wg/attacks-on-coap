@@ -209,7 +209,7 @@ Where 'X' means the attacker is blocking delivery of the message.
 Client    Foe    Server
    |       |       |
    +-------------->|      Code: 0.03 (PUT)
-   |       |  PUT  |     Token: 0x47
+   | PUT   |       |     Token: 0x47
    |       |       |  Uri-Path: lock
    |       |       |   Payload: 1 (Lock)
    |       |       |
@@ -310,40 +310,40 @@ new message with a new sequence number (not shown in
 door again, the attacker can deliver the delayed "unlock" message to
 the door, a very serious attack.
 
-~~~~
-Client   Foe   Server
-   |      |      |
-   +----->@      |      Code: 0.03 (PUT)
-   | PUT  |      |     Token: 0x9c
-   |      |      |  Uri-Path: lock
-   |      |      |   Payload: 0 (Unlock)
-   |      |      |
-   +------------>|      Code: 0.03 (PUT)
-   | PUT  |      |     Token: 0x9c
-   |      |      |  Uri-Path: lock
-   |      |      |   Payload: 0 (Unlock)
-   |      |      |
-   <-------------+      Code: 2.04 (Changed)
-   |      | 2.04 |     Token: 0x9c
-   |      |      |
-     ....   ....
-   |      |      |
-   +------------>|      Code: 0.03 (PUT)
-   | PUT  |      |     Token: 0x7a
-   |      |      |  Uri-Path: lock
-   |      |      |   Payload: 1 (Lock)
-   |      |      |
-   <-------------+      Code: 2.04 (Changed)
-   |      | 2.04 |     Token: 0x7a
-   |      |      |
-   |      @----->|      Code: 0.03 (PUT)
-   |      | PUT  |     Token: 0x9c
-   |      |      |  Uri-Path: lock
-   |      |      |   Payload: 0 (Unlock)
-   |      |      |
-   |      X<-----+      Code: 2.04 (Changed)
-   |      | 2.04 |     Token: 0x9c
-   |      |      |
+~~~~ aasvg
+Client    Foe    Server
+   |       |       |
+   +-----> @       |      Code: 0.03 (PUT)
+   | PUT   |       |     Token: 0x9c
+   |       |       |  Uri-Path: lock
+   |       |       |   Payload: 0 (Unlock)
+   |       |       |
+   +-------------->|      Code: 0.03 (PUT)
+   | PUT   |       |     Token: 0x9c
+   |       |       |  Uri-Path: lock
+   |       |       |   Payload: 0 (Unlock)
+   |       |       |
+   |<--------------+      Code: 2.04 (Changed)
+   |       |  2.04 |     Token: 0x9c
+   |       |       |
+      ...     ...
+   |       |       |
+   +-------------->|      Code: 0.03 (PUT)
+   | PUT   |       |     Token: 0x7a
+   |       |       |  Uri-Path: lock
+   |       |       |   Payload: 1 (Lock)
+   |       |       |
+   |<--------------+      Code: 2.04 (Changed)
+   |       |  2.04 |     Token: 0x7a
+   |       |       |
+   |       @------>|      Code: 0.03 (PUT)
+   |       |  PUT  |     Token: 0x9c
+   |       |       |  Uri-Path: lock
+   |       |       |   Payload: 0 (Unlock)
+   |       |       |
+   |       X <-----+      Code: 2.04 (Changed)
+   |       |  2.04 |     Token: 0x9c
+   |       |       |
 ~~~~
 {: #delayreqreorder title='Delaying request with reordering' artwork-align="center"}
 
