@@ -192,30 +192,30 @@ may be enough to determine the server, resource, and command.  The blocking
 attack is illustrated in Figures {{blockreq}}{: format="counter"} and {{blockres}}{: format="counter"}.
 
 
-~~~~
-Client   Foe   Server
-   |      |      |
-   +----->X      |      Code: 0.03 (PUT)
-   | PUT  |      |     Token: 0x47
-   |      |      |  Uri-Path: lock
-   |      |      |   Payload: 1 (Lock)
-   |      |      |
+~~~~ aasvg
+Client    Foe    Server
+   |       |       |
+   +-----> X       |      Code: 0.03 (PUT)
+   | PUT   |       |     Token: 0x47
+   |       |       |  Uri-Path: lock
+   |       |       |   Payload: 1 (Lock)
+   |       |       |
 ~~~~
 {: #blockreq title='Blocking a request' artwork-align="center"}
 
 Where 'X' means the attacker is blocking delivery of the message.
 
-~~~~
-Client   Foe   Server
-   |      |      |
-   +------------>|      Code: 0.03 (PUT)
-   |      | PUT  |     Token: 0x47
-   |      |      |  Uri-Path: lock
-   |      |      |   Payload: 1 (Lock)
-   |      |      |
-   |      X<-----+      Code: 2.04 (Changed)
-   |      | 2.04 |     Token: 0x47
-   |      |      |
+~~~~ aasvg
+Client    Foe    Server
+   |       |       |
+   +-------------->|      Code: 0.03 (PUT)
+   |       |  PUT  |     Token: 0x47
+   |       |       |  Uri-Path: lock
+   |       |       |   Payload: 1 (Lock)
+   |       |       |
+   |       X <-----+      Code: 2.04 (Changed)
+   |       |  2.04 |     Token: 0x47
+   |       |       |
 ~~~~
 {: #blockres title='Blocking a response' artwork-align="center"}
 
@@ -263,24 +263,24 @@ at the same time jamming the server. The request delay attack is illustrated
 in {{delayreq}}.
 
 
-~~~~
-Client   Foe   Server
-   |      |      |
-   +----->@      |      Code: 0.03 (PUT)
-   | PUT  |      |     Token: 0x9c
-   |      |      |  Uri-Path: lock
-   |      |      |   Payload: 0 (Unlock)
-   |      |      |
-     ....   ....
-   |      |      |
-   |      @----->|      Code: 0.03 (PUT)
-   |      | PUT  |     Token: 0x9c
-   |      |      |  Uri-Path: lock
-   |      |      |   Payload: 0 (Unlock)
-   |      |      |
-   |      X<-----+      Code: 2.04 (Changed)
-   |      | 2.04 |     Token: 0x9c
-   |      |      |
+~~~~ aasvg
+Client    Foe    Server
+   |       |       |
+   +-----> @       |      Code: 0.03 (PUT)
+   | PUT   |       |     Token: 0x9c
+   |       |       |  Uri-Path: lock
+   |       |       |   Payload: 0 (Unlock)
+   |       |       |
+      ...     ...
+   |       |       |
+   |       @------>|      Code: 0.03 (PUT)
+   |       |  PUT  |     Token: 0x9c
+   |       |       |  Uri-Path: lock
+   |       |       |   Payload: 0 (Unlock)
+   |       |       |
+   |       X <-----+      Code: 2.04 (Changed)
+   |       |  2.04 |     Token: 0x9c
+   |       |       |
 ~~~~
 {: #delayreq title='Delaying a request' artwork-align="center"}
 
