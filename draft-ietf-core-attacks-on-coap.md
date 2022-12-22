@@ -567,29 +567,29 @@ receive a confirmation on the second operation either, but, by the
 time the client acts on it, the server has already executed the
 unauthorized action.
 
-~~~~
+~~~~ 
 Client   Foe   Server
-   |      |      |
-   +------------->    POST "incarcerate" (Block1: 0, more to come)
-   |      |      |
-   <-------------+    2.31 Continue (Block1: 0 received, send more)
-   |      |      |
-   +----->@      |    POST "valjean" (Block1: 1, last block)
-   |      |      |
-   +----->X      |    All retransmissions dropped
-   |      |      |
+   |       |       |
+   +-------------->|    POST "incarcerate" (Block1: 0, more to come)
+   |       |       |
+   |<--------------+    2.31 Continue (Block1: 0 received, send more)
+   |       |       |
+   +-----> @       |    POST "valjean" (Block1: 1, last block)
+   |       |       |
+   +-----> X       |    All retransmissions dropped
+   |       |       |
 
 (Client: Odd, but let's go on and promote Javert)
 
-   |      |      |
-   +------------->    POST "promote" (Block1: 0, more to come)
-   |      |      |
-   |      X<-----+    2.31 Continue (Block1: 0 received, send more)
-   |      |      |
-   |      @------>    POST "valjean" (Block1: 1, last block)
-   |      |      |
-   |      X<-----+    2.04 Valjean Promoted
-   |      |      |
+   |       |       |
+   +-------------->|    POST "promote" (Block1: 0, more to come)
+   |       |       |
+   |       X <-----+    2.31 Continue (Block1: 0 received, send more)
+   |       |       |
+   |       @------>|    POST "valjean" (Block1: 1, last block)
+   |       |       |
+   |       X <-----+    2.04 Valjean Promoted
+   |       |       |
 ~~~~
 {: #promotevaljean title='Completing an operation with an earlier final block'}
 
@@ -638,32 +638,32 @@ shall we do with her?” – “Lock her up.”. The attack is illustrated in
 
 
 ~~~~
-Client   Foe   Server
-   |      |      |
-   +----->@      |    POST "Girl stole apple. Wh"
-   |      |      |        (Block1: 0, more to come)
+Client    Foe    Server
+   |       |       |
+   +-----> @       |    POST "Girl stole apple. Wh"
+   |       |       |        (Block1: 0, more to come)
 
 (Client: We'll try that one later again; for now, we have something
 more urgent:)
 
-   |      |      |
-   +------------->    POST "Evil Queen poisened apple. Wh"
-   |      |      |        (Block1: 0, more to come)
-   |      |      |
-   |      @<-----+    2.31 Continue (Block1: 0 received, send more)
-   |      |      |
-   |      @------>    POST "Girl stole apple. Wh"
-   |      |      |        (Block1: 0, more to come)
-   |      |      |
-   |      X<-----+    2.31 Continue (Block1: 0 received, send more)
-   |      |      |
-   <------@      |    2.31 Continue (Block1: 0 received, send more)
-   |      |      |
-   +------------->    POST "at shall we do with her?"
-   |      |      |        (Block1: 1, last block)
-   |      |      |
-   <-------------+    2.05 "Set her free."
-   |      |      |        (Block1: 1 received and this is the result)
+   |       |       |
+   +-------------->|    POST "Evil Queen poisened apple. Wh"
+   |       |       |        (Block1: 0, more to come)
+   |       |       |
+   |       @ <-----+    2.31 Continue (Block1: 0 received, send more)
+   |       |       |
+   |       @------>|    POST "Girl stole apple. Wh"
+   |       |       |        (Block1: 0, more to come)
+   |       |       |
+   |       X <-----+    2.31 Continue (Block1: 0 received, send more)
+   |       |       |
+   |<------@       |    2.31 Continue (Block1: 0 received, send more)
+   |       |       |
+   +-------------->|    POST "at shall we do with her?"
+   |       |       |        (Block1: 1, last block)
+   |       |       |
+   |<--------------+    2.05 "Set her free."
+   |       |       |        (Block1: 1 received and this is the result)
 ~~~~
 {: #freethequeen title='Injecting a withheld first block'}
 
