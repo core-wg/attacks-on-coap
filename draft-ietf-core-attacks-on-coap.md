@@ -55,10 +55,10 @@ author:
 informative:
   RFC7252:
   RFC7959:
-  RFC8152:
   RFC8323:
   RFC8446:
   RFC8613:
+  RFC9052:
   RFC9147:
   RFC9175:
   I-D.ietf-lake-edhoc:
@@ -93,7 +93,7 @@ OSCORE {{RFC8613}} to protect CoAP, where the choice of security
 protocol depends on the transport protocol and the presence of intermediaries.
 The use of CoAP over UDP and DTLS is specified in {{RFC7252}} and the
 use of CoAP over TCP and TLS is specified in {{RFC8323}}. OSCORE
-protects CoAP end-to-end with the use of COSE {{RFC8152}} and the CoAP
+protects CoAP end-to-end with the use of COSE {{RFC9052}} and the CoAP
 Object-Security option {{RFC8613}}, and can therefore be used over any
 transport. Using a security protocol to protect CoAP is a requirement for secure operation and protects against many attacks. The CoAP NoSec mode does not provide any security as an attacker can easily eavesdrop on all messages and forge false requests and responses.
 
