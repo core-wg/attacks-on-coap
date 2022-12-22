@@ -274,7 +274,7 @@ Client    Foe    Server
       ...     ...
    |       |       |
    |       @------>|      Code: 0.03 (PUT)
-   |       |  PUT  |     Token: 0x9c
+   |       | PUT   |     Token: 0x9c
    |       |       |  Uri-Path: lock
    |       |       |   Payload: 0 (Unlock)
    |       |       |
@@ -337,7 +337,7 @@ Client    Foe    Server
    |       |  2.04 |     Token: 0x7a
    |       |       |
    |       @------>|      Code: 0.03 (PUT)
-   |       |  PUT  |     Token: 0x9c
+   |       | PUT   |     Token: 0x9c
    |       |       |  Uri-Path: lock
    |       |       |   Payload: 0 (Unlock)
    |       |       |
@@ -441,7 +441,7 @@ Client    Foe    Server
    |       |       |   Payload: 0 (Lock)
    |       |       |
    |<------@       |      Code: 2.04 (Changed)
-   | 2.04  |       |     Token: 0x77
+   |  2.04 |       |     Token: 0x77
    |       |       |
 ~~~~
 {: #delayresPUT title='Delaying and mismatching response to PUT' artwork-align="center"}
@@ -481,7 +481,7 @@ Client    Foe    Server
    |       |       |  Uri-Path: lock
    |       |       |
    |<------@       |      Code: 2.05 (Content)
-   | 2.05  |       |     Token: 0x77
+   |  2.05 |       |     Token: 0x77
    |       |       |   Payload: 1 (Locked)
    |       |       |
 ~~~~
@@ -514,7 +514,7 @@ Client    Foe    Server
    |       |       |  Uri-Path: livingroom/temperature
    |       |       |
    |<------@       |      Code: 2.05 (Content)
-   | 2.05  |       |     Token: 0x77
+   |  2.05 |       |     Token: 0x77
    |       |       |   Payload: 225
    |       |       |
 ~~~~
@@ -731,12 +731,12 @@ challenge-response mechanism transferred as CoAP payloads.
 Client    Foe         Foe    Server
    |       |           |       |
    +------>| ......... +------>|      Code: 0.02 (POST)
-   | POST  |           |  POST |     Token: 0x3a
+   | POST  |           | POST  |     Token: 0x3a
    |       |           |       |  Uri-Path: lock
    |       |           |       |   Payload: JwePR2iCe8b0ux (Challenge)
    |       |           |       |
    |<------+ ......... |<------+      Code: 2.04 (Changed)
-   | 2.04  |           |  2.04 |     Token: 0x3a
+   |  2.04 |           |  2.04 |     Token: 0x3a
    |       |           |       |   Payload: RM8i13G8D5vfXK (Response)
    |       |           |       |
 ~~~~
