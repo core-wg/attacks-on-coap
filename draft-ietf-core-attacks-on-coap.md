@@ -568,7 +568,7 @@ time the client acts on it, the server has already executed the
 unauthorized action.
 
 ~~~~ aasvg
-Client   Foe   Server
+Client    Foe    Server
    |       |       |
    +-------------->|    POST "incarcerate" (Block1: 0, more to come)
    |       |       |
@@ -728,17 +728,17 @@ challenge-response mechanism transferred as CoAP payloads.
 
 
 ~~~~ aasvg
-Client   Foe         Foe   Server
-   |      |           |      |
-   +----->| ......... +----->|      Code: 0.02 (POST)
-   | POST |           | POST |     Token: 0x3a
-   |      |           |      |  Uri-Path: lock
-   |      |           |      |   Payload: JwePR2iCe8b0ux (Challenge)
-   |      |           |      |
-   |<-----+ ......... |<-----+      Code: 2.04 (Changed)
-   | 2.04 |           | 2.04 |     Token: 0x3a
-   |      |           |      |   Payload: RM8i13G8D5vfXK (Response)
-   |      |           |      |
+Client    Foe         Foe    Server
+   |       |           |       |
+   +------>| ......... +------>|      Code: 0.02 (POST)
+   | POST  |           |  POST |     Token: 0x3a
+   |       |           |       |  Uri-Path: lock
+   |       |           |       |   Payload: JwePR2iCe8b0ux (Challenge)
+   |       |           |       |
+   |<------+ ......... |<------+      Code: 2.04 (Changed)
+   | 2.04  |           |  2.04 |     Token: 0x3a
+   |       |           |       |   Payload: RM8i13G8D5vfXK (Response)
+   |       |           |       |
 ~~~~
 {: #relay title='Relay attack (the client is the actuator)' artwork-align="center"}
 
