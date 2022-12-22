@@ -422,27 +422,27 @@ but lowers the probability.
 
 The response delay and mismatch attack is illustrated in {{delayresPUT}}.
 
-~~~~
-Client   Foe   Server
-   |      |      |
-   +------------>|      Code: 0.03 (PUT)
-   | PUT  |      |     Token: 0x77
-   |      |      |  Uri-Path: lock
-   |      |      |   Payload: 0 (Unlock)
-   |      |      |
-   |      @<-----+      Code: 2.04 (Changed)
-   |      | 2.04 |     Token: 0x77
-   |      |      |
-     ....   ....
-   |      |      |
-   +----->X      |      Code: 0.03 (PUT)
-   | PUT  |      |     Token: 0x77
-   |      |      |  Uri-Path: lock
-   |      |      |   Payload: 0 (Lock)
-   |      |      |
-   <------@      |      Code: 2.04 (Changed)
-   | 2.04 |      |     Token: 0x77
-   |      |      |
+~~~~ aasvg
+Client    Foe    Server
+   |       |       |
+   +-------------->|      Code: 0.03 (PUT)
+   | PUT   |       |     Token: 0x77
+   |       |       |  Uri-Path: lock
+   |       |       |   Payload: 0 (Unlock)
+   |       |       |
+   |       @ <-----+      Code: 2.04 (Changed)
+   |       |  2.04 |     Token: 0x77
+   |       |       |
+      ...     ...
+   |       |       |
+   +-----> X       |      Code: 0.03 (PUT)
+   | PUT   |       |     Token: 0x77
+   |       |       |  Uri-Path: lock
+   |       |       |   Payload: 0 (Lock)
+   |       |       |
+   |<------@       |      Code: 2.04 (Changed)
+   | 2.04  |       |     Token: 0x77
+   |       |       |
 ~~~~
 {: #delayresPUT title='Delaying and mismatching response to PUT' artwork-align="center"}
 
@@ -457,33 +457,33 @@ The same attack may be performed on sensors. As illustrated in {{delayresGET}}, 
 that the lock is locked, when it in fact is not. The "Unlock" request
 may be also be sent by another client authorized to control the lock.
 
-~~~~
-Client   Foe   Server
-   |      |      |
-   +------------>|      Code: 0.01 (GET)
-   | GET  |      |     Token: 0x77
-   |      |      |  Uri-Path: lock
-   |      |      |
-   |      @<-----+      Code: 2.05 (Content)
-   |      | 2.05 |     Token: 0x77
-   |      |      |   Payload: 1 (Locked)
-   |      |      |
-   +------------>|      Code: 0.03 (PUT)
-   | PUT  |      |     Token: 0x34
-   |      |      |  Uri-Path: lock
-   |      |      |   Payload: 1 (Unlock)
-   |      |      |
-   |      X<-----+      Code: 2.04 (Changed)
-   |      | 2.04 |     Token: 0x34
-   |      |      |
-   +----->X      |      Code: 0.01 (GET)
-   | GET  |      |     Token: 0x77
-   |      |      |  Uri-Path: lock
-   |      |      |
-   <------@      |      Code: 2.05 (Content)
-   | 2.05 |      |     Token: 0x77
-   |      |      |   Payload: 1 (Locked)
-   |      |      |
+~~~~ aasvg
+Client    Foe    Server
+   |       |       |
+   +-------------->|      Code: 0.01 (GET)
+   | GET   |       |     Token: 0x77
+   |       |       |  Uri-Path: lock
+   |       |       |
+   |       @ <-----+      Code: 2.05 (Content)
+   |       |  2.05 |     Token: 0x77
+   |       |       |   Payload: 1 (Locked)
+   |       |       |
+   +-------------->|      Code: 0.03 (PUT)
+   | PUT   |       |     Token: 0x34
+   |       |       |  Uri-Path: lock
+   |       |       |   Payload: 1 (Unlock)
+   |       |       |
+   |       X <-----+      Code: 2.04 (Changed)
+   |       |  2.04 |     Token: 0x34
+   |       |       |
+   +-----> X       |      Code: 0.01 (GET)
+   | GET   |       |     Token: 0x77
+   |       |       |  Uri-Path: lock
+   |       |       |
+   |<------@       |      Code: 2.05 (Content)
+   | 2.05  |       |     Token: 0x77
+   |       |       |   Payload: 1 (Locked)
+   |       |       |
 ~~~~
 {: #delayresGET title='Delaying and mismatching response to GET' artwork-align="center"}
 
@@ -496,27 +496,27 @@ gateway, or are served by the same CoAP proxy. An on-path attacker
 client that the living room is on fire by responding with an earlier
 delayed response from the oven (temperatures in degree Celsius).
 
-~~~~
-Client   Foe   Server
-   |      |      |
-   +------------>|      Code: 0.01 (GET)
-   | GET  |      |     Token: 0x77
-   |      |      |  Uri-Path: oven/temperature
-   |      |      |
-   |      @<-----+      Code: 2.05 (Content)
-   |      | 2.05 |     Token: 0x77
-   |      |      |   Payload: 225
-   |      |      |
-     ....   ....
-   |      |      |
-   +----->X      |      Code: 0.01 (GET)
-   | GET  |      |     Token: 0x77
-   |      |      |  Uri-Path: livingroom/temperature
-   |      |      |
-   <------@      |      Code: 2.05 (Content)
-   | 2.05 |      |     Token: 0x77
-   |      |      |   Payload: 225
-   |      |      |
+~~~~ aasvg
+Client    Foe    Server
+   |       |       |
+   +-------------->|      Code: 0.01 (GET)
+   | GET   |       |     Token: 0x77
+   |       |       |  Uri-Path: oven/temperature
+   |       |       |
+   |       @ <-----+      Code: 2.05 (Content)
+   |       |  2.05 |     Token: 0x77
+   |       |       |   Payload: 225
+   |       |       |
+      ...     ...
+   |       |       |
+   +-----> X       |      Code: 0.01 (GET)
+   | GET   |       |     Token: 0x77
+   |       |       |  Uri-Path: livingroom/temperature
+   |       |       |
+   |<------@       |      Code: 2.05 (Content)
+   | 2.05  |       |     Token: 0x77
+   |       |       |   Payload: 225
+   |       |       |
 ~~~~
 {: #delayresother title='Delaying and mismatching response from other resource' artwork-align="center"}
 
