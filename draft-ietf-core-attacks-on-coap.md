@@ -567,7 +567,7 @@ receive a confirmation on the second operation either, but, by the
 time the client acts on it, the server has already executed the
 unauthorized action.
 
-~~~~ 
+~~~~ aasvg
 Client   Foe   Server
    |       |       |
    +-------------->|    POST "incarcerate" (Block1: 0, more to come)
@@ -637,7 +637,7 @@ shall we do with her?” – “Lock her up.”. The attack is illustrated in
 {{freethequeen}}.
 
 
-~~~~
+~~~~ aasvg
 Client    Foe    Server
    |       |       |
    +-----> @       |    POST "Girl stole apple. Wh"
@@ -727,7 +727,7 @@ based on that false assumption. The attack is illustrated in
 challenge-response mechanism transferred as CoAP payloads.
 
 
-~~~~
+~~~~ aasvg
 Client   Foe         Foe   Server
    |      |           |      |
    +----->| ......... +----->|      Code: 0.02 (POST)
