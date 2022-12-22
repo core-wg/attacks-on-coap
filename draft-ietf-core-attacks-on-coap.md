@@ -271,10 +271,10 @@ Client    Foe    Server
    |       |       |  Uri-Path: lock
    |       |       |   Payload: 0 (Unlock)
    |       |       |
-      ...     ...
+     .....   .....
    |       |       |
    |       @------>|      Code: 0.03 (PUT)
-   |       | PUT   |     Token: 0x9c
+   |       |  PUT  |     Token: 0x9c
    |       |       |  Uri-Path: lock
    |       |       |   Payload: 0 (Unlock)
    |       |       |
@@ -326,7 +326,7 @@ Client    Foe    Server
    |<--------------+      Code: 2.04 (Changed)
    |       |  2.04 |     Token: 0x9c
    |       |       |
-      ...     ...
+     .....   .....
    |       |       |
    +-------------->|      Code: 0.03 (PUT)
    | PUT   |       |     Token: 0x7a
@@ -337,7 +337,7 @@ Client    Foe    Server
    |       |  2.04 |     Token: 0x7a
    |       |       |
    |       @------>|      Code: 0.03 (PUT)
-   |       | PUT   |     Token: 0x9c
+   |       |  PUT  |     Token: 0x9c
    |       |       |  Uri-Path: lock
    |       |       |   Payload: 0 (Unlock)
    |       |       |
@@ -433,7 +433,7 @@ Client    Foe    Server
    |       @ <-----+      Code: 2.04 (Changed)
    |       |  2.04 |     Token: 0x77
    |       |       |
-      ...     ...
+     .....   .....
    |       |       |
    +-----> X       |      Code: 0.03 (PUT)
    | PUT   |       |     Token: 0x77
@@ -507,7 +507,7 @@ Client    Foe    Server
    |       |  2.05 |     Token: 0x77
    |       |       |   Payload: 225
    |       |       |
-      ...     ...
+     .....   .....
    |       |       |
    +-----> X       |      Code: 0.01 (GET)
    | GET   |       |     Token: 0x77
