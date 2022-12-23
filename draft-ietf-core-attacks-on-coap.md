@@ -413,7 +413,7 @@ to an uninterested client.
 
 The attack can be performed by an attacker on the wire, or an attacker simultaneously
 recording what the server transmits while at the same time jamming the client.
-As (D)TLS encrypts the Token, the attacker needs to predict when the Token is resused.
+As (D)TLS encrypts the Token, the attacker needs to predict when the Token is reused.
 How hard that is depends on the CoAP library, but some implementations are known
 to omit the Token as much as possible and others lets the application chose the
 Token. If the response is a "piggybacked response", the client may additionally check
@@ -549,7 +549,7 @@ provided the attacker is on the network path and can correctly guess which
 operations the respective packages belong to.
 
 The attacks can be performed on any security protocol where the attacker can
-delay the delivery of a message unnoticed. This incluses DTLS, IPsec, and most OSCORE
+delay the delivery of a message unnoticed. This inclused DTLS, IPsec, and most OSCORE
 configurations. The attacks does not work on TCP with TLS or OSCORE (with
 TLS-like sequence number handling) as in these cases no messages can be
 delivered before the delayed message.
