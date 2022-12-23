@@ -663,7 +663,7 @@ more urgent:)
    |       |       |        (Block1: 1, last block)
    |       |       |
    |<--------------+    2.05 "Set her free."
-   |       |       |        (Block1: 1 received and this is the result)
+   |       |       |        (Block1: 1 received, this is the result)
 ~~~~
 {: #freethequeen title='Injecting a withheld first block'}
 
@@ -728,17 +728,17 @@ challenge-response mechanism transferred as CoAP payloads.
 
 
 ~~~~ aasvg
-Client    Foe         Foe    Server
-   |       |           |       |
-   +------>| ......... +------>|      Code: 0.02 (POST)
-   | POST  |           | POST  |     Token: 0x3a
-   |       |           |       |  Uri-Path: lock
-   |       |           |       |   Payload: JwePR2iCe8b0ux (Challenge)
-   |       |           |       |
-   |<------+ ......... |<------+      Code: 2.04 (Changed)
-   |  2.04 |           |  2.04 |     Token: 0x3a
-   |       |           |       |   Payload: RM8i13G8D5vfXK (Response)
-   |       |           |       |
+Client    Foe        Foe    Server
+   |       |          |       |
+   +------>| ........ +------>|      Code: 0.02 (POST)
+   | POST  |          | POST  |     Token: 0x3a
+   |       |          |       |  Uri-Path: lock
+   |       |          |       |   Payload: JwePR2iCe8b0ux (Challenge)
+   |       |          |       |
+   |<------+ ........ |<------+      Code: 2.04 (Changed)
+   |  2.04 |          |  2.04 |     Token: 0x3a
+   |       |          |       |   Payload: RM8i13G8D5vfXK (Response)
+   |       |          |       |
 ~~~~
 {: #relay title='Relay attack (the client is the actuator)' artwork-align="center"}
 
