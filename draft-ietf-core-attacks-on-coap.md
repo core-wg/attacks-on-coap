@@ -77,7 +77,7 @@ connected and networking things interacting with
 the physical world. Using a security protocol such as DTLS, TLS, or OSCORE to protect CoAP is a requirement for secure operation and protects against many attacks. This document summarizes a number of known attacks on CoAP deployments and
 show that just using CoAP with a security protocol like DTLS, TLS, or OSCORE is not
 always enough for secure operation. Several of the discussed attacks can be mitigated
-with the solutions in RFC 9175.
+with a security protocol such as DTLS, TLS, or OSCORE combined with the solutions in RFC 9175.
 
 --- middle
 
@@ -95,7 +95,10 @@ The use of CoAP over UDP and DTLS is specified in {{RFC7252}} and the
 use of CoAP over TCP and TLS is specified in {{RFC8323}}. OSCORE
 protects CoAP end-to-end with the use of COSE {{RFC9052}} and the CoAP
 Object-Security option {{RFC8613}}, and can therefore be used over any
-transport. Using a security protocol to protect CoAP is a requirement for secure operation and protects against many attacks. The CoAP NoSec mode does not provide any security as an attacker can easily eavesdrop on all messages and forge false requests and responses.
+transport. Using a security protocol to protect CoAP is a requirement
+for secure operation and protects against many attacks. The CoAP NoSec
+mode does not provide any security as an attacker can easily eavesdrop on all
+messages and forge false requests and responses.
 
 The four properties traditionally provided by security protocols are:
 
@@ -107,8 +110,15 @@ The four properties traditionally provided by security protocols are:
 
 * Data replay protection
 
+These four properties should be seen as a requirement for Internet-of-Things
+(IoT) deployments. To achieve this a cipher suite offering encryption is
+required. Without encryption, home deployments typically leak privacy
+sensitive information. NIST require encryption of all information for
+enterprises following zero trust priciples. The CoAP NoSec is not appropriate
+for enterprises or home deployments.
+
 In this document we show that protecting CoAP with a security protocol is
-not enough to securely control actuators (and in
+not always enough to securely control actuators (and in
 many cases sensors) and that secure operation often demands far more than
 the four properties traditionally provided by security protocols. We describe
 several serious attacks any on-path attacker (i.e., not only "trusted intermediaries")
@@ -164,8 +174,10 @@ authorized operations.
 
 The goal with this document is motivating generic
 and protocol-specific recommendations on the usage of CoAP.
-Mechanisms mitigating some of the attacks discussed in this document can
-be found in {{RFC9175}}. This document is a companion document to {{RFC9175}}
+Several of the discussed attacks can be mitigated
+with a security protocol offereing confidentiality and integrity
+such as DTLS, TLS, or OSCORE combined with the solutions in {{RFC9175}}.
+This document is a companion document to {{RFC9175}}
 giving more information on the attacks motivating the mechanisms.
 
 # Attacks on CoAP
