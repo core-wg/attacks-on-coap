@@ -76,8 +76,8 @@ to not enable distributed denial-of-service attacks are essential in a world of
 connected and networking things interacting with
 the physical world. Using a security protocol such as DTLS, TLS, or OSCORE to protect CoAP is a requirement for secure operation and protects against many attacks. This document summarizes a number of known attacks on CoAP deployments and
 show that just using CoAP with a security protocol like DTLS, TLS, or OSCORE is not
-enough for secure operation. Several of the
-discussed attacks can be mitigated with the solutions in RFC 9175.
+always enough for secure operation. Several of the discussed attacks can be mitigated
+with the solutions in RFC 9175.
 
 --- middle
 
@@ -178,11 +178,15 @@ are made under the assumption that CoAP is already protected with a security
 protocol such as DTLS, TLS, or OSCORE, as an attacker otherwise can easily
 forge false requests and responses.
 
-##  The Blocking Attack
+##  The Selective Blocking Attack
 
-An on-path attacker can block the delivery of any number of requests or responses.
-The attack can also be performed by an attacker jamming the lower layer radio
-protocol. This is true even if a security protocol like DTLS, TLS, or OSCORE
+An on-path attacker can block the delivery of selective of requests or responses
+while letting through others. The selective blocking attack is not specific to
+CoAP but is especially important to consider for actuators and is an important
+building block for the other CoAP specific attacks described in the document
+that block or delay selective messages.
+
+The selective blocking attack is possible even if a security protocol like DTLS, TLS, or OSCORE
 is used. Encryption makes selective blocking of messages harder, but not
 impossible or even infeasible. With DTLS and TLS, proxies can read
 the complete CoAP message, and with OSCORE, the CoAP header and several CoAP
@@ -190,7 +194,6 @@ options are not encrypted. In all three security protocols, the IP-addresses,
 ports, and CoAP message lengths are available to all on-path attackers, which
 may be enough to determine the server, resource, and command.  The blocking
 attack is illustrated in Figures {{blockreq}}{: format="counter"} and {{blockres}}{: format="counter"}.
-
 
 ~~~~ aasvg
 Client    Foe    Server
@@ -219,7 +222,8 @@ Client    Foe    Server
 ~~~~
 {: #blockres title='Blocking a response' artwork-align="center"}
 
-While blocking requests to, or responses from, a sensor is just a denial-of-service attack,
+The selective blocking attack is an attack on availability.  While blocking requests
+to, or responses from, a sensor is just a denial-of-service attack,
 blocking a request to, or a response from, an actuator
 results in the client losing information about the server's status. If the
 actuator e.g., is a lock (door, car, etc.), the attack results in the client
@@ -232,8 +236,6 @@ from middle boxes such as NATs and firewalls.
 Remedy: Any IoT deployment of actuators where synchronized state is important need to
 use confirmable messages and the client need to take appropriate actions when a response
 is not received and it therefore loses information about the server's status.
-
-
 
 
 
@@ -744,7 +746,7 @@ Client    Foe        Foe    Server
 
 The consequences may be severe, and in the case of a car, lead to the attacker
 unlocking and driving away with the car, an attack that unfortunately is
-happening in practice.
+happening in practice. The relay attack is not specific to CoAP.
 
 Remedy: Getting a response over a short-range radio cannot be taken as
 proof of proximity and can therefore not be used to take actions based on
