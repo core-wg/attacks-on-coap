@@ -418,9 +418,10 @@ application specific challenge-response or timestamp mechanism is used.
 
 ##  The Response Delay and Mismatch Attack {#resdelay}
 
-The following attack can be performed if CoAP is protected by a security
-protocol where the response is not bound to the request in any way except
-by the CoAP token. This would include most general security protocols, such
+The following attack can be performed if an unpatched CoAP implementation
+not following the updated client token processing specified in {{RFC7252}} is
+used with a security protocol where the response is not bound to the request
+in any way except by the CoAP token. This would include most general security protocols, such
 as DTLS, TLS, and IPsec, but not OSCORE. CoAP {{RFC7252}} uses a
 client generated token that the server echoes to match responses to
 request, but does not give any guidelines for the use of token with DTLS
@@ -550,11 +551,7 @@ Client    Foe    Server
 {: #delayresother title='Delaying and mismatching response from other resource' artwork-align="center"}
 
 Remedy: Section 4.2 of {{RFC9175}} formally updates the client token processing for CoAP {{RFC7252}}.
-Following this updated processing mitigates the attack.
-
-
-
-
+Using an patched CoAP implementation following the updated processing completely mitigates the attack.
 
 
 
