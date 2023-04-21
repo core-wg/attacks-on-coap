@@ -802,12 +802,14 @@ This document has no actions for IANA.
 
 The authors would like to thank
 {{{Carsten Bormann}}},
+{{{Mohamed Boucadair}}},
 {{{Klaus Hartke}}},
 {{{Jaime Jiménez}}},
 {{{Ari Keränen}}},
 {{{Matthias Kovatsch}}},
 {{{Achim Kraus}}},
 {{{Sandeep Kumar}}},
+{{{András Méhes}}},
 and
-{{{András Méhes}}}
+{{{Jon Swallow}}}
 for their valuable comments and feedback.
