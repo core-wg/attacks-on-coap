@@ -187,7 +187,7 @@ authorized operations.
 The goal with this document is motivating generic
 and protocol-specific recommendations on the usage of CoAP.
 Several of the discussed attacks can be mitigated
-with a security protocol offereing confidentiality and integrity
+with a security protocol offering confidentiality and integrity
 such as DTLS, TLS, or OSCORE combined with the solutions in {{RFC9175}}.
 
 This document is a companion document to {{RFC9175}}
