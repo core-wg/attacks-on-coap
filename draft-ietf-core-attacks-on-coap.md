@@ -256,7 +256,7 @@ is not received and it therefore loses information about the server's status.
 ##  The Request Delay Attack {#reqdelay}
 
 An on-path attacker may not only block packets, but can also delay the delivery
-of any packet (request or response) by a chosen amount of time. If CoAP is
+of a selectively chosen packet (request or response) by a chosen amount of time. If CoAP is
 used over a reliable and ordered transport such as TCP with TLS or OSCORE (with
 TLS-like sequence number handling), no messages can be delivered before the
 delayed message. If CoAP is used
@@ -303,8 +303,8 @@ Client    Foe    Server
 Where '@' means the attacker is storing and later forwarding the message
 (@ may alternatively be seen as a wormhole connecting two points in time).
 
-While an attacker delaying a request to a sensor is often not a security
-problem, an attacker delaying a request to an actuator performing an action
+While an attacker selectively delaying a request to a sensor is often not a security
+problem, an attacker selectively delaying a request to an actuator performing an action
 is often a serious problem. A request to an actuator (for example a request
 to unlock a lock) is often only meant to be valid for a short time frame,
 and if the request does not reach the actuator during this short timeframe,
@@ -394,7 +394,7 @@ with the client is easier to analyze but require more roundtrips. The challenges
 responses, and timestamps may be sent in a CoAP option or in the CoAP payload.
 
 Remedy: Any IoT deployment of actuators where freshness is important should use
-the mechanisms specified in {{RFC9175}} unless another
+the Echo option specified in {{RFC9175}} unless another
 application specific challenge-response or timestamp mechanism is used.
 
 
