@@ -125,7 +125,7 @@ These four properties should be seen as requirements for Internet-of-Things
 (IoT) deployments. To achieve this a cipher suite offering encryption is
 required. Without encryption, home deployments typically leak privacy
 sensitive information. NIST requires encryption of all traffic inside
-enterprise networks following zero trust priciples {{NIST-ZT}}. The CoAP NoSec
+enterprise networks following zero trust principles {{NIST-ZT}}. The CoAP NoSec
 mode is therefore not appropriate for enterprises or home deployments.
 
 The assumption in this document is that a security protocol providing the four
@@ -485,7 +485,7 @@ the home, enterprise, or car protected by the lock.
 
 The same attack may be performed on sensors. As illustrated in {{delayresGET}}, an attacker may convince the client
 that the lock is locked, when it in fact is not. The "Unlock" request
-may be also be sent by another client authorized to control the lock.
+may also be sent by another client authorized to control the lock.
 
 ~~~~ aasvg
 Client    Foe    Server
@@ -551,7 +551,7 @@ Client    Foe    Server
 {: #delayresother title='Delaying and mismatching response from other resource' artwork-align="center"}
 
 Remedy: Section 4.2 of {{RFC9175}} formally updates the client token processing for CoAP {{RFC7252}}.
-Using an patched CoAP implementation following the updated processing completely mitigates the attack.
+Using a patched CoAP implementation following the updated processing completely mitigates the attack.
 
 
 
@@ -575,7 +575,7 @@ provided the attacker is on the network path and can correctly guess which
 operations the respective packages belong to.
 
 The attacks can be performed on any security protocol where the attacker can
-delay the delivery of a message unnoticed. This inclused DTLS, IPsec, and most OSCORE
+delay the delivery of a message unnoticed. This includes DTLS, IPsec, and most OSCORE
 configurations. The attacks does not work on TCP with TLS or OSCORE (with
 TLS-like sequence number handling) as in these cases no messages can be
 delivered before the delayed message.
@@ -643,7 +643,7 @@ outcomes could have occurred:
    "incarcerate" request's state, and process the "promote"
    request. The reinjected POST "valjean" will then fail with 4.08
    Request Entity incomplete, indicating that the server does not have
-   the start of the operation any more.
+   the start of the operation anymore.
 
 
 
@@ -673,7 +673,7 @@ Client    Foe    Server
 more urgent:)
 
    |       |       |
-   +-------------->|    POST "Evil Queen poisened apple. Wh"
+   +-------------->|    POST "Evil Queen poisoned apple. Wh"
    |       |       |        (Block1: 0, more to come)
    |       |       |
    |       @ <-----+    2.31 Continue (Block1: 0 received, send more)
@@ -736,7 +736,7 @@ Summarizing,
 it is unlikely that an attacker can perform any of the fragment rearrangement attacks on any given system --
 but given the diversity of applications built on CoAP, it is easily to imagine that single applications would be vulnerable.
 As block-wise transfer is a basic feature of CoAP and its details are sometimes hidden behind abstractions or proxies,
-application authors can not be expected to design their applications with these attacks in mind,
+application authors cannot be expected to design their applications with these attacks in mind,
 and mitigation on the protocol level is prudent.
 
 ##  The Relay Attack
