@@ -126,7 +126,7 @@ These four properties should be seen as requirements for Internet-of-Things
 required. Without encryption, home deployments typically leak privacy
 sensitive information. NIST requires encryption of all traffic inside
 enterprise networks following zero trust priciples {{NIST-ZT}}. The CoAP NoSec
-therefore not appropriate for enterprises or home deployments.
+mode is therefore not appropriate for enterprises or home deployments.
 
 The assumption in this document is that a security protocols providing the four
 properties above is always used. We show that this is
