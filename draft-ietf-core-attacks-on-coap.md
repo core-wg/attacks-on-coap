@@ -116,7 +116,7 @@ The four properties traditionally provided by security protocols are:
 These four properties should be seen as a requirement for Internet-of-Things
 (IoT) deployments. To achieve this a cipher suite offering encryption is
 required. Without encryption, home deployments typically leak privacy
-sensitive information. NIST require encryption of all information for
+sensitive information. NIST requires encryption of all information for
 enterprises following zero trust priciples. The CoAP NoSec is not appropriate
 for enterprises or home deployments.
 
