@@ -207,7 +207,7 @@ forge false requests and responses.
 
 ##  The Selective Blocking Attack
 
-An on-path attacker can block the delivery of selective of requests or responses
+An on-path attacker can block the delivery of selectively chosen requests or responses
 while letting through others. The selective blocking attack is not specific to
 CoAP but is especially important to consider for actuators and is an important
 building block for the other CoAP specific attacks described in the document
