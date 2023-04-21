@@ -62,6 +62,7 @@ informative:
   RFC9147:
   RFC9175:
   I-D.ietf-lake-edhoc:
+  I-D.irtf-t2trg-amplification-attacks:
 
 venue:
   group: Constrained RESTful Environments (CoRE)
