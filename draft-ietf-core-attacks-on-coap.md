@@ -128,7 +128,7 @@ sensitive information. NIST requires encryption of all traffic inside
 enterprise networks following zero trust priciples {{NIST-ZT}}. The CoAP NoSec
 mode is therefore not appropriate for enterprises or home deployments.
 
-The assumption in this document is that a security protocols providing the four
+The assumption in this document is that a security protocol providing the four
 properties above is always used. We show that this is
 not always enough to securely control actuators (and in
 many cases sensors) and that secure operation often demands more than
