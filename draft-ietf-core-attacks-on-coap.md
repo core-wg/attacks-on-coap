@@ -73,11 +73,13 @@ venue:
 
 Being able to securely read information from sensors, to securely control actuators, and
 to not enable distributed denial-of-service attacks are essential in a world of
-connected and networking things interacting with
-the physical world. Using a security protocol such as DTLS, TLS, or OSCORE to protect CoAP is a requirement for secure operation and protects against many attacks. This document summarizes a number of known attacks on CoAP deployments and
+connected and networking things interacting with the physical world. Using a security
+protocol such as DTLS, TLS, or OSCORE to protect CoAP is a requirement for secure operation
+and protects against many attacks. This document summarizes a number of known attacks on CoAP deployments and
 show that just using CoAP with a security protocol like DTLS, TLS, or OSCORE is not
 always enough for secure operation. Several of the discussed attacks can be mitigated
-with a security protocol such as DTLS, TLS, or OSCORE combined with the solutions in RFC 9175.
+with a security protocol such as DTLS, TLS, or OSCORE providing confidentiality and
+integrity combined with the solutions in RFC 9175.
 
 --- middle
 
