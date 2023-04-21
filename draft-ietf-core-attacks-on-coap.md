@@ -64,6 +64,14 @@ informative:
   I-D.ietf-lake-edhoc:
   I-D.irtf-t2trg-amplification-attacks:
 
+  NIST-ZT:
+    target: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-207.pdf
+    title: "Zero Trust Architecture"
+    author:
+      -
+        ins: "National Institute of Standards and Technology"
+    date: August 2020
+
 venue:
   group: Constrained RESTful Environments (CoRE)
   mail: core@ietf.org
@@ -90,7 +98,7 @@ Being able to securely read information from sensors and to securely control act
 are essential in a world of connected and networking things interacting with
 the physical world. One protocol used to interact with sensors and actuators
 is the Constrained Application Protocol (CoAP) {{RFC7252}}. Any
-Internet-of-Things (IoT) deployment valuing security and privacy would
+Internet-of-Things (IoT) deployment valuing security and privacy already
 use a security protocol such as DTLS {{RFC9147}}, TLS {{RFC8446}}, or
 OSCORE {{RFC8613}} to protect CoAP, where the choice of security
 protocol depends on the transport protocol and the presence of intermediaries.
@@ -113,14 +121,14 @@ The four properties traditionally provided by security protocols are:
 
 * Data replay protection
 
-These four properties should be seen as a requirement for Internet-of-Things
+These four properties should be seen as requirements for Internet-of-Things
 (IoT) deployments. To achieve this a cipher suite offering encryption is
 required. Without encryption, home deployments typically leak privacy
-sensitive information. NIST requires encryption of all information for
-enterprises following zero trust priciples. The CoAP NoSec is not appropriate
-for enterprises or home deployments.
+sensitive information. NIST requires encryption of all traffic inside
+enterprise networks following zero trust priciples {{NIST-ZT}}. The CoAP NoSec
+therefore not appropriate for enterprises or home deployments.
 
-The assumption is this document is that a security protocols providing the four
+The assumption in this document is that a security protocols providing the four
 properties above is always used. We show that this is
 not always enough to securely control actuators (and in
 many cases sensors) and that secure operation often demands more than
@@ -181,8 +189,11 @@ and protocol-specific recommendations on the usage of CoAP.
 Several of the discussed attacks can be mitigated
 with a security protocol offereing confidentiality and integrity
 such as DTLS, TLS, or OSCORE combined with the solutions in {{RFC9175}}.
+
 This document is a companion document to {{RFC9175}}
 giving more information on the attacks motivating the mechanisms.
+Denial-of-service using amplification attacks and how to mitigate them
+are discussed in {{I-D.irtf-t2trg-amplification-attacks}}.
 
 # Attacks on CoAP
 
