@@ -119,9 +119,10 @@ sensitive information. NIST require encryption of all information for
 enterprises following zero trust priciples. The CoAP NoSec is not appropriate
 for enterprises or home deployments.
 
-In this document we show that protecting CoAP with a security protocol is
+The assumption is this document is that a security protocols providing the four
+properties above is always used. We show that this is
 not always enough to securely control actuators (and in
-many cases sensors) and that secure operation often demands far more than
+many cases sensors) and that secure operation often demands more than
 the four properties traditionally provided by security protocols. We describe
 several serious attacks any on-path attacker (i.e., not only "trusted intermediaries")
 can do and discusses tougher requirements and mechanisms to mitigate the
