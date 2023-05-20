@@ -61,6 +61,7 @@ informative:
   RFC9052:
   RFC9147:
   RFC9175:
+  RFC9177:
   I-D.ietf-lake-edhoc:
   I-D.irtf-t2trg-amplification-attacks:
 
@@ -580,9 +581,9 @@ configurations. The attacks does not work on TCP with TLS or OSCORE (with
 TLS-like sequence number handling) as in these cases no messages can be
 delivered before the delayed message.
 
-This section primarily concerns itself with the regular block-wise mechanism defined in {{rfc7959}}.
-The special-purpose Q-Block mechanism of {{?rfc9177}}
-already mandates the mitigations that were introduced in {{rfc9175}}.
+This section primarily concerns itself with the regular block-wise mechanism defined in {{RFC7959}}.
+The special-purpose Q-Block mechanism of {{RFC9177}}
+already mandates the mitigations that were introduced in {{RFC9175}}.
 
 ### Completing an Operation with an Earlier Final Block {#fragment-earlierfinal}
 
