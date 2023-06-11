@@ -801,6 +801,20 @@ This document has no actions for IANA.
 
 --- back
 
+# Change log
+{: removeInRFC="true"}
+
+Changes from -02 to -03:
+
+* Renamed "Blocking Attack" to "Selective Blocking Attack", and clarified.
+* Emphasize selectiveness of delay attack.
+* Acknowledge that response-delay-and-mismatch is mitigated with the new token procesing rules.
+* Acknowledge that fragment rearrangement is mitigated with Request-Tag option, as mandatory for Q-Block.
+* Point to DoS mitigation in t2trg-amplification-attacks.
+* Point to NIST requirements on zero trust principles (NIST-ZT).
+* Update acknowledgements.
+* Editorial changes.
+
 # Acknowledgements
 {: numbered="false"}
 
