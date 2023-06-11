@@ -801,10 +801,10 @@ This document has no actions for IANA.
 
 --- back
 
-# Changes
+# Change log
 {: removeInRFC="true"}
 
-Changes since -02:
+Changes from -02 to -03:
 
 * Renamed "Blocking Attack" to "Selective Blocking Attack", and clarified.
 * Emphasize selectiveness of delay attack.
