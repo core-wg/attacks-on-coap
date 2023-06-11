@@ -50,8 +50,7 @@ author:
   email: francesca.palombini@ericsson.com
 - name: Christian Amsüss
   surname: Amsüss
-  org: Energy Harvesting Solutions
-  email: c.amsuess@energyharvesting.at
+  email: christian@amsuess.com
 informative:
   RFC7252:
   RFC7959:
