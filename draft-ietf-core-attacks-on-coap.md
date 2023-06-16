@@ -51,15 +51,16 @@ author:
 - name: Christian Amsüss
   surname: Amsüss
   email: christian@amsuess.com
-informative:
+normative:
   RFC7252:
   RFC7959:
+  RFC9175:
+informative:
   RFC8323:
   RFC8446:
   RFC8613:
   RFC9052:
   RFC9147:
-  RFC9175:
   RFC9177:
   I-D.ietf-lake-edhoc:
   I-D.irtf-t2trg-amplification-attacks:
