@@ -80,15 +80,12 @@ venue:
 
 --- abstract
 
-Being able to securely read information from sensors, to securely control actuators, and
-to not enable distributed denial-of-service attacks are essential in a world of
-connected and networking things interacting with the physical world. Using a security
-protocol such as DTLS, TLS, or OSCORE to protect CoAP is a requirement for secure operation
-and protects against many attacks. This document summarizes a number of known attacks on CoAP deployments and
-show that just using CoAP with a security protocol like DTLS, TLS, or OSCORE is not
-always enough for secure operation. Several of the discussed attacks can be mitigated
-with a security protocol such as DTLS, TLS, or OSCORE providing confidentiality and
-integrity combined with the solutions in RFC 9175.
+Being able to securely retrieve information from sensors and control actuators while providing guards against
+distributed denial-of-service (DDoS) attacks are key requirements for CoAP deployments. To that aim, a security
+protocol (e.g., DTLS, TLS, or OSCORE) can be enabled to ensure secure CoAP operation, including protection against many attacks.
+This document identifies a set of known CoAP attacks and shows that simply using CoAP with a security protocol is not
+always enough for secure operation. Several of the identified attacks can be mitigated
+with a security protocol providing confidentiality and integrity combined with the solutions specified in RFC 9175.
 
 --- middle
 
