@@ -1,0 +1,165 @@
+\documentclass[aspectratio=169,colorlinks]{beamer}
+\usetheme{Boadilla} % plainest one with slide number footer
+
+% generic packages
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{ulem}
+\usepackage{hyperref}
+
+% about the presentation
+\title{Attacks on CoAP}
+\subtitle{\texttt{draft-ietf-core-attacks-on-coap}}
+\author{John~Preuß~Mattsson, John~Fornehed, Göran~Selander, Francesca~Palombini, \textit{Christian~Amsüss}}
+\date{IETF117 San Francisco, CoRE, 2023-07-25}
+
+% used commands
+
+\usepackage{verbatim}
+
+\newcommand{\rfc}[1]{\href{https://datatracker.ietf.org/doc/html/rfc#1}{RFC~#1}}
+\newcommand{\ietfdraft}[1]{\href{https://datatracker.ietf.org/doc/draft-#1/}{draft #1}}
+
+% attach self
+
+\usepackage{embedfile}
+\embedfile{\jobname.tex}
+\embedfile{Makefile}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{History: IETF99}
+	\fbox{\includegraphics[page=98,width=0.6\pagewidth]{slides-99-core-consolidated-slides-06.pdf}}
+\end{frame}
+
+\begin{frame}{History: IETF99}
+	\fbox{\includegraphics[page=99,width=0.6\pagewidth]{slides-99-core-consolidated-slides-06.pdf}}
+
+	\texttt{repeat-request-tag} became \texttt{echo-request-tag}, and eventually \rfc{9175}
+
+	\texttt{coap-actuators} became \texttt{attacks-on-coap}.
+\end{frame}
+
+\begin{frame}{Content}\large
+	``Here is what can go wrong
+	in the presence of an on-path attacker
+	that may even guess plain text
+	but does not break the cryptographic primitives,
+	and there (eg. \rfc{9175}) is how to avoid it.''
+
+	\vspace{2cm}
+
+	Except, we're may not be done :'-(
+\end{frame}
+
+\begin{frame}{Return of the Request Fragment Rearrangement}\large
+	\framesubtitle{Praphrasing dialogue between Jon Shallow and Christian Amsüss}
+	\begin{itemize}
+		\item[J] That can also happen when there is no Block1 phase.
+		\item[C] No, because then it's concurrent requests, and those don't work without Request-Tag anyway. In the Block2 phase, the request payload is repeated.
+		\item[J] The problem is still there.
+		\item[C] \textit{reads \rfc{7959} and blushes.}
+	\end{itemize}
+
+	\bigskip
+
+	Turns out, the request payload is very much not repeated.
+\end{frame}
+
+\begin{frame}[fragile]{Return of the Request Fragment Rearrangement}\small
+	\framesubtitle{Example}
+	\begin{verbatim}
+   Client   Foe   Server
+      |      |      |
+      +------X      |    POST "request" T:1 { "offset":0, "length":2000}
+      |      |      |
+      +------------->    POST "request" T:2 { "offset":4000, "length":2000}
+      |      |      |
+      |      @------>    POST "request" T:1 { "offset":0, "length":2000}
+      |      |      |
+      <-------------+    2.04 T:2 Block2:0/1/1024 { data containing 4000:1024 }
+      |      |      |
+      <-------------+    2.04 T:1 Block2:0/1/1024 { data containing 0:1024 }
+      |      |      |
+      +------------->    POST "request" T:3 Block2:0/_/1024
+                         server - is this continuation of request using T:1 or T:2 ?
+      |      |      |
+      <-------------+    2.04 T:3 Block2:1/_/1024 { data containing 1024:2000 }
+                         Was this the expected data ?
+      |      |      |
+	\end{verbatim}
+\end{frame}
+
+\begin{frame}{Possible solution A: Use Request-Tag more often}\large
+	Old: ``When a client fragments a request body into multiple message payloads [ the body integrity is not protected ]. To gain that protection, use the Request-Tag mechanism as follows:''
+
+	\bigskip
+
+	New: ``\tiny{}When a client fragments a request body into multiple message payloads\large{}, or on requests that are matchable to requests the client may have produced and is prepared to accept fragmented responses for (even if the request body is small or empty), \tiny [ the body integrity is not protected ]. To gain that protection, use the Request-Tag mechanism a follows:''
+
+	\large
+	\bigskip
+
+	Could be short document, updates \rfc{9175} (maybe also \rfc{9177}).
+\end{frame}
+
+\begin{frame}{Practical Impact of using Request-Tag more often}\large
+	When using OSCORE: Negligible.
+
+	Constrained OSCORE implementations can always use the absent Request-Tag option
+	as long as they spot some conditions after which they bump their sender sequence number.
+
+	\bigskip
+
+	When using DTLS:
+	Almost all requests that could have requests that could have resquest and response bodies
+	will need a Request-Tag, typically a counter.
+
+	\ldots But they already tolerate having tokens that practically need to be counting up. How large is the impact really?
+\end{frame}
+
+\begin{frame}{Possible solution B: Allow server to declare Request-Tag}\large
+	\framesubtitle{Suggestion from Jon}
+
+	Would update \rfc{9175} to allow use in requests.
+
+	Shifts logic and state tracking to the server.
+\end{frame}
+
+\begin{frame}{Possible solution C: Tighten ETag}\large
+	Add some small requirements around ETags
+	to ensure they prevent the attack.
+
+	\bigskip
+
+	``\ldots are necessary even if the represention does not change over time but is a function of the request payload\ldots''
+
+	``\ldots ETags must be unique to the body even across request payloads \ldots''
+
+	\bigskip
+
+	Could be short document, updates \rfc{7252} or \rfc{7959} (maybe also \rfc{9175}).
+\end{frame}
+
+\begin{frame}{Roadmap}\Large
+	\begin{enumerate}
+		\item Tune example, decide whether single example covers it well.
+		\item Write text for proposed solutions.
+		\item Pick best solution.
+		\item Ask WG to adopt solution.
+		\item Continue with this document when we can point to solution.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}{Thanks}\Large
+	Comments?
+
+	\bigskip
+
+	Questions?
+\end{frame}
+
+\end{document}
