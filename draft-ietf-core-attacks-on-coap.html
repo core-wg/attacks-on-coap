@@ -1,0 +1,2677 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Attacks on the Constrained Application Protocol (CoAP)</title>
+<meta content="John Preuß Mattsson" name="author">
+<meta content="John Fornehed" name="author">
+<meta content="Göran Selander" name="author">
+<meta content="Francesca Palombini" name="author">
+<meta content="Christian Amsüss" name="author">
+<meta content="
+       Being able to securely read information from sensors, to securely control actuators, and
+to not enable distributed denial-of-service attacks are essential in a world of
+connected and networking things interacting with the physical world. Using a security
+protocol such as DTLS, TLS, or OSCORE to protect CoAP is a requirement for secure operation
+and protects against many attacks. This document summarizes a number of known attacks on CoAP deployments and
+show that just using CoAP with a security protocol like DTLS, TLS, or OSCORE is not
+always enough for secure operation. Several of the discussed attacks can be mitigated
+with a security protocol such as DTLS, TLS, or OSCORE providing confidentiality and
+integrity combined with the solutions in RFC 9175. 
+    " name="description">
+<meta content="xml2rfc 3.17.4" name="generator">
+<meta name="keyword">
+<meta content="draft-ietf-core-attacks-on-coap-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.17.4
+    Python 3.11.4
+    ConfigArgParse 1.5.3
+    google-i18n-address 3.1.0
+    intervaltree 3.1.0
+    Jinja2 3.1.2
+    lxml 4.9.3
+    platformdirs 3.9.1
+    pycountry 22.3.5
+    PyYAML 6.0
+    requests 2.31.0
+    setuptools 67.7.2
+    six 1.16.0
+    wcwidth 0.2.6
+-->
+<link href="draft-ietf-core-attacks-on-coap.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Cabin Condensed", sans-serif;
+  font-weight: 600;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+}
+:is(ol, ul) :is(ol, ul) {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  line-height: 1;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+}
+dl.olPercent {
+  --indent: 5ch;
+}
+dl > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+dl.olPercent > dt {
+  min-width: calc(var(--indent) - 2ch);
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:first-child, .break:first-child + *) {
+  margin-top: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:last-child) {
+  margin-bottom: 0;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    overflow-x: auto;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+}
+a.pilcrow[href] { color: var(--pilcrow-weak); }
+a.pilcrow[href]:hover { text-decoration: none; }
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+}
+#identifiers dt {
+  width: var(--identifier-width);
+  min-width: var(--identifier-width);
+  clear: left;
+  float: left;
+  text-align: right;
+  margin-right: 1ch;
+}
+#identifiers dd {
+  margin: 0;
+  margin-left: calc(1em + var(--identifier-width)) !important;
+  min-width: 5em;
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+#toc nav ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+#toc nav li {
+  line-height: 1.3em;
+  margin: 0.75em 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+#toc a.xref {
+  white-space: normal;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 10ch;
+  margin-right: 1.5ch;
+}
+.references dt:target::before {
+  content: "⇒";
+  width: 15px;
+  margin: 0 10px 0 -25px;
+}
+.references dd {
+  margin-left: 12ch !important;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc.active {
+      opacity: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 8px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active nav {
+    display: block;
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin-top: 2px;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  #toc nav > ul  {
+    margin-bottom: 2em;
+  }
+  #toc ul {
+    margin: 0 0 0 4px;
+    font-size: var(--small-font-size);
+  }
+  #toc ul :is(p, li) {
+    margin: 2px 0;
+    line-height: 22px;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre {
+    page-break-inside: avoid;
+  }
+  figure {
+    overflow: scroll;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  h2+*, h3+*, h4+*, h5+*, h6+* {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Changes introduced to fix issues found during implementation */
+
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin: 8px 0.5em 0;
+}
+
+/* Provide styling for table cell text alignment */
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 20em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Give the table caption label the same styling as the figcaption */
+
+@media print {
+  .toplink {
+    display: none;
+  }
+
+  /* avoid overwriting the top border line with the ToC header */
+  #toc {
+    padding-top: 1px;
+  }
+
+  /* Avoid page breaks inside dl and author address entries */
+  dd {
+    page-break-before: avoid;
+  }
+  .vcard {
+    page-break-inside: avoid;
+  }
+
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">Attacks on CoAP</td>
+<td class="right">July 2023</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Preuß Mattsson, et al.</td>
+<td class="center">Expires 26 January 2024</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">Network Working Group</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-ietf-core-attacks-on-coap-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2023-07-25" class="published">25 July 2023</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Informational</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2024-01-26">26 January 2024</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">J. Preuß Mattsson</div>
+<div class="org">Ericsson</div>
+</div>
+<div class="author">
+      <div class="author-name">J. Fornehed</div>
+<div class="org">Ericsson</div>
+</div>
+<div class="author">
+      <div class="author-name">G. Selander</div>
+<div class="org">Ericsson</div>
+</div>
+<div class="author">
+      <div class="author-name">F. Palombini</div>
+<div class="org">Ericsson</div>
+</div>
+<div class="author">
+      <div class="author-name">C. Amsüss</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Attacks on the Constrained Application Protocol (CoAP)</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">Being able to securely read information from sensors, to securely control actuators, and
+to not enable distributed denial-of-service attacks are essential in a world of
+connected and networking things interacting with the physical world. Using a security
+protocol such as DTLS, TLS, or OSCORE to protect CoAP is a requirement for secure operation
+and protects against many attacks. This document summarizes a number of known attacks on CoAP deployments and
+show that just using CoAP with a security protocol like DTLS, TLS, or OSCORE is not
+always enough for secure operation. Several of the discussed attacks can be mitigated
+with a security protocol such as DTLS, TLS, or OSCORE providing confidentiality and
+integrity combined with the solutions in RFC 9175.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-ietf-core-attacks-on-coap/">https://datatracker.ietf.org/doc/draft-ietf-core-attacks-on-coap/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        Constrained RESTful Environments (CoRE) Working Group mailing list (<span><a href="mailto:core@ietf.org">mailto:core@ietf.org</a></span>),
+        which is archived at <span><a href="https://mailarchive.ietf.org/arch/browse/core/">https://mailarchive.ietf.org/arch/browse/core/</a></span>.
+        Subscribe at <span><a href="https://www.ietf.org/mailman/listinfo/core/">https://www.ietf.org/mailman/listinfo/core/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/core-wg/attacks-on-coap">https://github.com/core-wg/attacks-on-coap</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 26 January 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2023 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-attacks-on-coap" class="internal xref">Attacks on CoAP</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
+                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-the-selective-blocking-atta" class="internal xref">The Selective Blocking Attack</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2">
+                <p id="section-toc.1-1.2.2.2.1" class="keepWithNext"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-the-request-delay-attack" class="internal xref">The Request Delay Attack</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3">
+                <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="auto internal xref">2.3</a>.  <a href="#name-the-response-delay-and-mism" class="internal xref">The Response Delay and Mismatch Attack</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4">
+                <p id="section-toc.1-1.2.2.4.1"><a href="#section-2.4" class="auto internal xref">2.4</a>.  <a href="#name-the-request-fragment-rearra" class="internal xref">The Request Fragment Rearrangement Attack</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4.2.1">
+                    <p id="section-toc.1-1.2.2.4.2.1.1"><a href="#section-2.4.1" class="auto internal xref">2.4.1</a>.  <a href="#name-completing-an-operation-wit" class="internal xref">Completing an Operation with an Earlier Final Block</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4.2.2">
+                    <p id="section-toc.1-1.2.2.4.2.2.1"><a href="#section-2.4.2" class="auto internal xref">2.4.2</a>.  <a href="#name-injecting-a-withheld-first-" class="internal xref">Injecting a Withheld First Block</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4.2.3">
+                    <p id="section-toc.1-1.2.2.4.2.3.1"><a href="#section-2.4.3" class="auto internal xref">2.4.3</a>.  <a href="#name-attack-difficulty" class="internal xref">Attack difficulty</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.5">
+                <p id="section-toc.1-1.2.2.5.1"><a href="#section-2.5" class="auto internal xref">2.5</a>.  <a href="#name-the-relay-attack" class="internal xref">The Relay Attack</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-change-log" class="internal xref">Change log</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-acknowledgements" class="internal xref">Acknowledgements</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">Being able to securely read information from sensors and to securely control actuators
+are essential in a world of connected and networking things interacting with
+the physical world. One protocol used to interact with sensors and actuators
+is the Constrained Application Protocol (CoAP) <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>. Any
+Internet-of-Things (IoT) deployment valuing security and privacy already
+use a security protocol such as DTLS <span>[<a href="#RFC9147" class="cite xref">RFC9147</a>]</span>, TLS <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, or
+OSCORE <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span> to protect CoAP, where the choice of security
+protocol depends on the transport protocol and the presence of intermediaries.
+The use of CoAP over UDP and DTLS is specified in <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> and the
+use of CoAP over TCP and TLS is specified in <span>[<a href="#RFC8323" class="cite xref">RFC8323</a>]</span>. OSCORE
+protects CoAP end-to-end with the use of COSE <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span> and the CoAP
+Object-Security option <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>, and can therefore be used over any
+transport. Using a security protocol to protect CoAP is a requirement
+for secure operation and protects against many attacks. The CoAP NoSec
+mode does not provide any security as an attacker can easily eavesdrop on all
+messages and forge false requests and responses.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">The four properties traditionally provided by security protocols are:<a href="#section-1-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1-3.1">Data confidentiality<a href="#section-1-3.1" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-1-3.2">Data origin authentication<a href="#section-1-3.2" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-1-3.3">Data integrity protection<a href="#section-1-3.3" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-1-3.4">Data replay protection<a href="#section-1-3.4" class="pilcrow">¶</a>
+</li>
+      </ul>
+<p id="section-1-4">These four properties should be seen as requirements for Internet-of-Things
+(IoT) deployments. To achieve this a cipher suite offering encryption is
+required. Without encryption, home deployments typically leak privacy
+sensitive information. NIST requires encryption of all traffic inside
+enterprise networks following zero trust principles <span>[<a href="#NIST-ZT" class="cite xref">NIST-ZT</a>]</span>. The CoAP NoSec
+mode is therefore not appropriate for enterprises or home deployments.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">The assumption in this document is that a security protocol providing the four
+properties above is always used. We show that this is
+not always enough to securely control actuators (and in
+many cases sensors) and that secure operation often demands more than
+the four properties traditionally provided by security protocols. We describe
+several serious attacks any on-path attacker (i.e., not only "trusted intermediaries")
+can do and discusses tougher requirements and mechanisms to mitigate the
+attacks. In general, secure operation also requires these four
+properties:<a href="#section-1-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1-6.1">Availability<a href="#section-1-6.1" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-1-6.2">Data-to-data binding<a href="#section-1-6.2" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-1-6.3">Data-to-space binding<a href="#section-1-6.3" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-1-6.4">Data-to-time binding<a href="#section-1-6.4" class="pilcrow">¶</a>
+</li>
+      </ul>
+<p id="section-1-7">Availability means that services and information must be available when needed.
+"Data-to-data binding" is e.g., binding of responses to a request or binding
+of data fragments to each other. "Data-to-space binding" is the binding of
+data to an absolute or relative point in space (i.e., a location) and may
+in the relative case be referred to as proximity. "Data-to-time binding"
+is the binding of data to an absolute or relative point in time and may in
+the relative case be referred to as freshness. The two last properties may
+be bundled together as "Data-to-spacetime binding".<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-8">Freshness (as defined in <span>[<a href="#RFC9175" class="cite xref">RFC9175</a>]</span>) is a measure of when a message was sent on a timescale of
+the recipient.  A client or server that receives a message can either
+verify that the message is fresh or determine that it cannot be
+verified that the message is fresh.  What is considered fresh is
+application dependent.  Freshness is completely different from replay
+protection, but most replay protection mechanism use a sequence
+number.  Assuming the client is well-behaving, such a sequence number
+that can be used by the server as a relative measure of when a
+message was sent on a timescale of the sender.  Replay protection is
+mandatory in TLS and OSCORE and optional in DTLS.  DTLS and TLS
+use sequence numbers for both requests and responses. In TLS the
+sequence numbers are implicit and not sent in the record.
+OSCORE use sequence numbers for requests and some responses.
+Most OSCORE responses are bound to the request and therefore,
+enable the client to determine if the response is fresh or not.<a href="#section-1-8" class="pilcrow">¶</a></p>
+<p id="section-1-9">Some of the presented attacks such as the blocking attack, the
+request delay attack, and the relay attack are not specific to CoAP.
+The request delay attack (valid for DTLS, TLS, and OSCORE and
+described in <a href="#reqdelay" class="auto internal xref">Section 2.2</a>) lets an attacker control an actuator at a
+much later time than the client anticipated. The response delay and
+mismatch attack (valid for DTLS and TLS and described in <a href="#resdelay" class="auto internal xref">Section 2.3</a>)
+lets an attacker respond to a client with a response meant for an
+older request. The request fragment rearrangement attack (valid for
+DTLS, TLS, and OSCORE and described in <a href="#fragment" class="auto internal xref">Section 2.4</a>) lets an attacker
+cause unauthorized operations to be performed on the server, and
+responses to unauthorized operations to be mistaken for responses to
+authorized operations.<a href="#section-1-9" class="pilcrow">¶</a></p>
+<p id="section-1-10">The goal with this document is motivating generic
+and protocol-specific recommendations on the usage of CoAP.
+Several of the discussed attacks can be mitigated
+with a security protocol offering confidentiality and integrity
+such as DTLS, TLS, or OSCORE combined with the solutions in <span>[<a href="#RFC9175" class="cite xref">RFC9175</a>]</span>.<a href="#section-1-10" class="pilcrow">¶</a></p>
+<p id="section-1-11">This document is a companion document to <span>[<a href="#RFC9175" class="cite xref">RFC9175</a>]</span>
+giving more information on the attacks motivating the mechanisms.
+Denial-of-service using amplification attacks and how to mitigate them
+are discussed in <span>[<a href="#I-D.irtf-t2trg-amplification-attacks" class="cite xref">I-D.irtf-t2trg-amplification-attacks</a>]</span>.<a href="#section-1-11" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="attacks-on-coap">
+<section id="section-2">
+      <h2 id="name-attacks-on-coap">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-attacks-on-coap" class="section-name selfRef">Attacks on CoAP</a>
+      </h2>
+<p id="section-2-1">Internet-of-Things (IoT) deployments valuing security and privacy, need to use
+a security protocol such as DTLS, TLS, or OSCORE to protect CoAP. This is
+especially true for deployments of actuators where attacks often (but not
+always) have serious consequences. The attacks described in this section
+are made under the assumption that CoAP is already protected with a security
+protocol such as DTLS, TLS, or OSCORE, as an attacker otherwise can easily
+forge false requests and responses.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<div id="the-selective-blocking-attack">
+<section id="section-2.1">
+        <h3 id="name-the-selective-blocking-atta">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-the-selective-blocking-atta" class="section-name selfRef">The Selective Blocking Attack</a>
+        </h3>
+<p id="section-2.1-1">An on-path attacker can block the delivery of selectively chosen requests or responses
+while letting through others. The selective blocking attack is not specific to
+CoAP but is especially important to consider for actuators and is an important
+building block for the other CoAP specific attacks described in the document
+that block or delay selective messages.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.1-2">The selective blocking attack is possible even if a security protocol like DTLS, TLS, or OSCORE
+is used. Encryption makes selective blocking of messages harder, but not
+impossible or even infeasible. With DTLS and TLS, proxies can read
+the complete CoAP message, and with OSCORE, the CoAP header and several CoAP
+options are not encrypted. In all three security protocols, the IP-addresses,
+ports, and CoAP message lengths are available to all on-path attackers, which
+may be enough to determine the server, resource, and command.  The blocking
+attack is illustrated in Figures <a href="#blockreq" class="auto internal xref">1</a> and <a href="#blockres" class="auto internal xref">2</a>.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+<span id="name-blocking-a-request"></span><div id="blockreq">
+<figure id="figure-1">
+          <div id="section-2.1-3.1">
+            <div class="alignCenter art-svg artwork" id="section-2.1-3.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="144" width="344" viewBox="0 0 344 144" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 32,48 L 32,128" fill="none" stroke="black"></path>
+                <path d="M 96,80 L 96,128" fill="none" stroke="black"></path>
+                <path d="M 160,48 L 160,128" fill="none" stroke="black"></path>
+                <path d="M 32,64 L 80,64" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="88,64 76,58.4 76,69.6" fill="black" transform="rotate(0,80,64)"></polygon>
+                <g class="text">
+                  <text x="28" y="36">Client</text>
+                  <text x="96" y="36">Foe</text>
+                  <text x="164" y="36">Server</text>
+                  <text x="96" y="52">|</text>
+                  <text x="96" y="68">X</text>
+                  <text x="232" y="68">Code:</text>
+                  <text x="276" y="68">0.03</text>
+                  <text x="320" y="68">(PUT)</text>
+                  <text x="56" y="84">PUT</text>
+                  <text x="228" y="84">Token:</text>
+                  <text x="276" y="84">0x47</text>
+                  <text x="216" y="100">Uri-Path:</text>
+                  <text x="276" y="100">lock</text>
+                  <text x="220" y="116">Payload:</text>
+                  <text x="264" y="116">1</text>
+                  <text x="300" y="116">(Lock)</text>
+                </g>
+              </svg><a href="#section-2.1-3.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-blocking-a-request" class="selfRef">Blocking a request</a>
+          </figcaption></figure>
+</div>
+<p id="section-2.1-4">Where 'X' means the attacker is blocking delivery of the message.<a href="#section-2.1-4" class="pilcrow">¶</a></p>
+<span id="name-blocking-a-response"></span><div id="blockres">
+<figure id="figure-2">
+          <div id="section-2.1-5.1">
+            <div class="alignCenter art-svg artwork" id="section-2.1-5.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="192" width="376" viewBox="0 0 376 192" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 32,48 L 32,176" fill="none" stroke="black"></path>
+                <path d="M 96,72 L 96,128" fill="none" stroke="black"></path>
+                <path d="M 96,160 L 96,176" fill="none" stroke="black"></path>
+                <path d="M 160,48 L 160,176" fill="none" stroke="black"></path>
+                <path d="M 32,64 L 152,64" fill="none" stroke="black"></path>
+                <path d="M 112,144 L 160,144" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="160,64 148,58.4 148,69.6" fill="black" transform="rotate(0,152,64)"></polygon>
+                <polygon class="arrowhead" points="120,144 108,138.4 108,149.6" fill="black" transform="rotate(180,112,144)"></polygon>
+                <g class="text">
+                  <text x="28" y="36">Client</text>
+                  <text x="96" y="36">Foe</text>
+                  <text x="164" y="36">Server</text>
+                  <text x="96" y="52">|</text>
+                  <text x="232" y="68">Code:</text>
+                  <text x="276" y="68">0.03</text>
+                  <text x="320" y="68">(PUT)</text>
+                  <text x="56" y="84">PUT</text>
+                  <text x="228" y="84">Token:</text>
+                  <text x="276" y="84">0x47</text>
+                  <text x="216" y="100">Uri-Path:</text>
+                  <text x="276" y="100">lock</text>
+                  <text x="220" y="116">Payload:</text>
+                  <text x="264" y="116">1</text>
+                  <text x="300" y="116">(Lock)</text>
+                  <text x="96" y="148">X</text>
+                  <text x="232" y="148">Code:</text>
+                  <text x="276" y="148">2.04</text>
+                  <text x="336" y="148">(Changed)</text>
+                  <text x="132" y="164">2.04</text>
+                  <text x="228" y="164">Token:</text>
+                  <text x="276" y="164">0x47</text>
+                </g>
+              </svg><a href="#section-2.1-5.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-blocking-a-response" class="selfRef">Blocking a response</a>
+          </figcaption></figure>
+</div>
+<p id="section-2.1-6">The selective blocking attack is an attack on availability.  While blocking requests
+to, or responses from, a sensor is just a denial-of-service attack,
+blocking a request to, or a response from, an actuator
+results in the client losing information about the server's status. If the
+actuator e.g., is a lock (door, car, etc.), the attack results in the client
+not knowing (except by using out-of-band information) whether the lock is
+unlocked or locked, just like the observer in the famous <span class="contact-name">Schrödinger’s</span> cat
+thought experiment. Due to the nature of the attack, the client cannot distinguish
+the attack from connectivity problems, offline servers, or unexpected behavior
+from middle boxes such as NATs and firewalls.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
+<p id="section-2.1-7">Remedy: Any IoT deployment of actuators where synchronized state is important need to
+use confirmable messages and the client need to take appropriate actions when a response
+is not received and it therefore loses information about the server's status.<a href="#section-2.1-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="reqdelay">
+<section id="section-2.2">
+        <h3 id="name-the-request-delay-attack">
+<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-the-request-delay-attack" class="section-name selfRef">The Request Delay Attack</a>
+        </h3>
+<p id="section-2.2-1">An on-path attacker may not only block packets, but can also delay the delivery
+of a selectively chosen packet (request or response) by a chosen amount of time. If CoAP is
+used over a reliable and ordered transport such as TCP with TLS or OSCORE (with
+TLS-like sequence number handling), no messages can be delivered before the
+delayed message. If CoAP is used
+over an unreliable and unordered transport such as UDP with DTLS or OSCORE,
+other messages can be delivered before the delayed message as long as the
+delayed packet is delivered inside the replay window. When CoAP is used over
+UDP, both DTLS and OSCORE allow out-of-order delivery and uses sequence numbers
+together with a replay window to protect against replay attacks against requests.
+The replay window has a default length of 64 in DTLS and 32 in OSCORE. The attacker
+can influence the replay window state by blocking and delaying packets. By first
+delaying a request, and then later, after delivery, blocking the response
+to the request, the client is not made aware of the delayed delivery except
+by the missing response. In general, the server has no way of knowing that
+the request was delayed and will therefore happily process the request.
+Note that delays can also happen for other reasons than a malicious attacker.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2-2">If some wireless low-level protocol is used, the attack can also be performed
+by the attacker simultaneously recording what the client transmits while
+at the same time jamming the server. The request delay attack is illustrated
+in <a href="#delayreq" class="auto internal xref">Figure 3</a>.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
+<span id="name-delaying-a-request"></span><div id="delayreq">
+<figure id="figure-3">
+          <div id="section-2.2-3.1">
+            <div class="alignCenter art-svg artwork" id="section-2.2-3.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="304" width="376" viewBox="0 0 376 304" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 32,48 L 32,128" fill="none" stroke="black"></path>
+                <path d="M 32,160 L 32,288" fill="none" stroke="black"></path>
+                <path d="M 96,80 L 96,128" fill="none" stroke="black"></path>
+                <path d="M 96,192 L 96,240" fill="none" stroke="black"></path>
+                <path d="M 96,272 L 96,288" fill="none" stroke="black"></path>
+                <path d="M 160,48 L 160,128" fill="none" stroke="black"></path>
+                <path d="M 160,160 L 160,288" fill="none" stroke="black"></path>
+                <path d="M 32,64 L 80,64" fill="none" stroke="black"></path>
+                <path d="M 104,176 L 152,176" fill="none" stroke="black"></path>
+                <path d="M 112,256 L 160,256" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="160,176 148,170.4 148,181.6" fill="black" transform="rotate(0,152,176)"></polygon>
+                <polygon class="arrowhead" points="120,256 108,250.4 108,261.6" fill="black" transform="rotate(180,112,256)"></polygon>
+                <polygon class="arrowhead" points="88,64 76,58.4 76,69.6" fill="black" transform="rotate(0,80,64)"></polygon>
+                <g class="text">
+                  <text x="28" y="36">Client</text>
+                  <text x="96" y="36">Foe</text>
+                  <text x="164" y="36">Server</text>
+                  <text x="96" y="52">|</text>
+                  <text x="96" y="68">@</text>
+                  <text x="232" y="68">Code:</text>
+                  <text x="276" y="68">0.03</text>
+                  <text x="320" y="68">(PUT)</text>
+                  <text x="56" y="84">PUT</text>
+                  <text x="228" y="84">Token:</text>
+                  <text x="276" y="84">0x9c</text>
+                  <text x="216" y="100">Uri-Path:</text>
+                  <text x="276" y="100">lock</text>
+                  <text x="220" y="116">Payload:</text>
+                  <text x="264" y="116">0</text>
+                  <text x="308" y="116">(Unlock)</text>
+                  <text x="64" y="148">.....</text>
+                  <text x="128" y="148">.....</text>
+                  <text x="96" y="164">|</text>
+                  <text x="96" y="180">@</text>
+                  <text x="232" y="180">Code:</text>
+                  <text x="276" y="180">0.03</text>
+                  <text x="320" y="180">(PUT)</text>
+                  <text x="128" y="196">PUT</text>
+                  <text x="228" y="196">Token:</text>
+                  <text x="276" y="196">0x9c</text>
+                  <text x="216" y="212">Uri-Path:</text>
+                  <text x="276" y="212">lock</text>
+                  <text x="220" y="228">Payload:</text>
+                  <text x="264" y="228">0</text>
+                  <text x="308" y="228">(Unlock)</text>
+                  <text x="96" y="260">X</text>
+                  <text x="232" y="260">Code:</text>
+                  <text x="276" y="260">2.04</text>
+                  <text x="336" y="260">(Changed)</text>
+                  <text x="132" y="276">2.04</text>
+                  <text x="228" y="276">Token:</text>
+                  <text x="276" y="276">0x9c</text>
+                </g>
+              </svg><a href="#section-2.2-3.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-delaying-a-request" class="selfRef">Delaying a request</a>
+          </figcaption></figure>
+</div>
+<p id="section-2.2-4">Where '@' means the attacker is storing and later forwarding the message
+(@ may alternatively be seen as a wormhole connecting two points in time).<a href="#section-2.2-4" class="pilcrow">¶</a></p>
+<p id="section-2.2-5">While an attacker selectively delaying a request to a sensor is often not a security
+problem, an attacker selectively delaying a request to an actuator performing an action
+is often a serious problem. A request to an actuator (for example a request
+to unlock a lock) is often only meant to be valid for a short time frame,
+and if the request does not reach the actuator during this short timeframe,
+the request should not be fulfilled. In the unlock example, if the client
+does not get any response and does not physically see the lock opening, the
+user is likely to walk away, calling the locksmith (or the IT-support).<a href="#section-2.2-5" class="pilcrow">¶</a></p>
+<p id="section-2.2-6">If a non-zero replay window is used (the default when CoAP is used
+over UDP), the attacker can let the client interact with the actuator
+before delivering the delayed request to the server (illustrated in
+<a href="#delayreqreorder" class="auto internal xref">Figure 4</a>).  In the lock example, the attacker may store the
+first "unlock" request for later use.  The client will likely resend
+the request with the same token.  If DTLS is used, the resent packet
+will have a different sequence number and the attacker can forward
+it. If OSCORE is used, resent packets will have the same sequence
+number and the attacker must block them all until the client sends a
+new message with a new sequence number (not shown in
+<a href="#delayreqreorder" class="auto internal xref">Figure 4</a>). After a while when the client has locked the
+door again, the attacker can deliver the delayed "unlock" message to
+the door, a very serious attack.<a href="#section-2.2-6" class="pilcrow">¶</a></p>
+<span id="name-delaying-request-with-reord"></span><div id="delayreqreorder">
+<figure id="figure-4">
+          <div id="section-2.2-7.1">
+            <div class="alignCenter art-svg artwork" id="section-2.2-7.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="560" width="376" viewBox="0 0 376 560" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 32,48 L 32,256" fill="none" stroke="black"></path>
+                <path d="M 32,288 L 32,544" fill="none" stroke="black"></path>
+                <path d="M 96,80 L 96,136" fill="none" stroke="black"></path>
+                <path d="M 96,152 L 96,216" fill="none" stroke="black"></path>
+                <path d="M 96,232 L 96,256" fill="none" stroke="black"></path>
+                <path d="M 96,312 L 96,376" fill="none" stroke="black"></path>
+                <path d="M 96,392 L 96,416" fill="none" stroke="black"></path>
+                <path d="M 96,448 L 96,496" fill="none" stroke="black"></path>
+                <path d="M 96,528 L 96,544" fill="none" stroke="black"></path>
+                <path d="M 160,48 L 160,256" fill="none" stroke="black"></path>
+                <path d="M 160,288 L 160,544" fill="none" stroke="black"></path>
+                <path d="M 32,64 L 80,64" fill="none" stroke="black"></path>
+                <path d="M 32,144 L 152,144" fill="none" stroke="black"></path>
+                <path d="M 40,224 L 160,224" fill="none" stroke="black"></path>
+                <path d="M 32,304 L 152,304" fill="none" stroke="black"></path>
+                <path d="M 40,384 L 160,384" fill="none" stroke="black"></path>
+                <path d="M 104,432 L 152,432" fill="none" stroke="black"></path>
+                <path d="M 112,512 L 160,512" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="160,432 148,426.4 148,437.6" fill="black" transform="rotate(0,152,432)"></polygon>
+                <polygon class="arrowhead" points="160,304 148,298.4 148,309.6" fill="black" transform="rotate(0,152,304)"></polygon>
+                <polygon class="arrowhead" points="160,144 148,138.4 148,149.6" fill="black" transform="rotate(0,152,144)"></polygon>
+                <polygon class="arrowhead" points="120,512 108,506.4 108,517.6" fill="black" transform="rotate(180,112,512)"></polygon>
+                <polygon class="arrowhead" points="88,64 76,58.4 76,69.6" fill="black" transform="rotate(0,80,64)"></polygon>
+                <polygon class="arrowhead" points="48,384 36,378.4 36,389.6" fill="black" transform="rotate(180,40,384)"></polygon>
+                <polygon class="arrowhead" points="48,224 36,218.4 36,229.6" fill="black" transform="rotate(180,40,224)"></polygon>
+                <g class="text">
+                  <text x="28" y="36">Client</text>
+                  <text x="96" y="36">Foe</text>
+                  <text x="164" y="36">Server</text>
+                  <text x="96" y="52">|</text>
+                  <text x="96" y="68">@</text>
+                  <text x="232" y="68">Code:</text>
+                  <text x="276" y="68">0.03</text>
+                  <text x="320" y="68">(PUT)</text>
+                  <text x="56" y="84">PUT</text>
+                  <text x="228" y="84">Token:</text>
+                  <text x="276" y="84">0x9c</text>
+                  <text x="216" y="100">Uri-Path:</text>
+                  <text x="276" y="100">lock</text>
+                  <text x="220" y="116">Payload:</text>
+                  <text x="264" y="116">0</text>
+                  <text x="308" y="116">(Unlock)</text>
+                  <text x="232" y="148">Code:</text>
+                  <text x="276" y="148">0.03</text>
+                  <text x="320" y="148">(PUT)</text>
+                  <text x="56" y="164">PUT</text>
+                  <text x="228" y="164">Token:</text>
+                  <text x="276" y="164">0x9c</text>
+                  <text x="216" y="180">Uri-Path:</text>
+                  <text x="276" y="180">lock</text>
+                  <text x="220" y="196">Payload:</text>
+                  <text x="264" y="196">0</text>
+                  <text x="308" y="196">(Unlock)</text>
+                  <text x="232" y="228">Code:</text>
+                  <text x="276" y="228">2.04</text>
+                  <text x="336" y="228">(Changed)</text>
+                  <text x="132" y="244">2.04</text>
+                  <text x="228" y="244">Token:</text>
+                  <text x="276" y="244">0x9c</text>
+                  <text x="64" y="276">.....</text>
+                  <text x="128" y="276">.....</text>
+                  <text x="96" y="292">|</text>
+                  <text x="232" y="308">Code:</text>
+                  <text x="276" y="308">0.03</text>
+                  <text x="320" y="308">(PUT)</text>
+                  <text x="56" y="324">PUT</text>
+                  <text x="228" y="324">Token:</text>
+                  <text x="276" y="324">0x7a</text>
+                  <text x="216" y="340">Uri-Path:</text>
+                  <text x="276" y="340">lock</text>
+                  <text x="220" y="356">Payload:</text>
+                  <text x="264" y="356">1</text>
+                  <text x="300" y="356">(Lock)</text>
+                  <text x="232" y="388">Code:</text>
+                  <text x="276" y="388">2.04</text>
+                  <text x="336" y="388">(Changed)</text>
+                  <text x="132" y="404">2.04</text>
+                  <text x="228" y="404">Token:</text>
+                  <text x="276" y="404">0x7a</text>
+                  <text x="96" y="436">@</text>
+                  <text x="232" y="436">Code:</text>
+                  <text x="276" y="436">0.03</text>
+                  <text x="320" y="436">(PUT)</text>
+                  <text x="128" y="452">PUT</text>
+                  <text x="228" y="452">Token:</text>
+                  <text x="276" y="452">0x9c</text>
+                  <text x="216" y="468">Uri-Path:</text>
+                  <text x="276" y="468">lock</text>
+                  <text x="220" y="484">Payload:</text>
+                  <text x="264" y="484">0</text>
+                  <text x="308" y="484">(Unlock)</text>
+                  <text x="96" y="516">X</text>
+                  <text x="232" y="516">Code:</text>
+                  <text x="276" y="516">2.04</text>
+                  <text x="336" y="516">(Changed)</text>
+                  <text x="132" y="532">2.04</text>
+                  <text x="228" y="532">Token:</text>
+                  <text x="276" y="532">0x9c</text>
+                </g>
+              </svg><a href="#section-2.2-7.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-delaying-request-with-reord" class="selfRef">Delaying request with reordering</a>
+          </figcaption></figure>
+</div>
+<p id="section-2.2-8">While the second attack (<a href="#delayreqreorder" class="auto internal xref">Figure 4</a>) can be mitigated by
+using a replay window of length zero, the first attack (<a href="#delayreq" class="auto internal xref">Figure 3</a>)
+cannot. A solution must enable the server to verify that the request
+was received within a certain time frame after it was sent or enable
+the server to securely determine an absolute point in time when the
+request is to be executed. This can be accomplished with either a
+challenge-response pattern, by exchanging timestamps between client
+and server, or by only allowing requests a short period after client
+authentication.<a href="#section-2.2-8" class="pilcrow">¶</a></p>
+<p id="section-2.2-9">Requiring a fresh client authentication (such as a new TLS/DTLS handshake
+or an EDHOC key exchange <span>[<a href="#I-D.ietf-lake-edhoc" class="cite xref">I-D.ietf-lake-edhoc</a>]</span>) mitigates the
+problem, but requires larger messages and more processing
+than a dedicated solution. Security solutions based on exchanging timestamps
+require exactly synchronized time between client and server, and this may
+be hard to control with complications such as time zones and daylight saving.
+Wall clock time is not monotonic, may reveal that the endpoints will accept
+expired certificates, or reveal the endpoint's
+location. Use of non-monotonic clocks is problematic as the server will accept
+requests if the clock is moved backward and reject requests if the clock
+is moved forward. Even if the clocks are synchronized at one point in time,
+they may easily get out-of-sync and an attacker may even be able to affect
+the client or the server time in various ways such as setting up a fake NTP
+server, broadcasting false time signals to radio-controlled clocks, or exposing
+one of them to a strong gravity field. As soon as client falsely believes
+it is time synchronized with the server, delay attacks are possible. A challenge
+response mechanism where the server does not need to synchronize its time
+with the client is easier to analyze but require more roundtrips. The challenges,
+responses, and timestamps may be sent in a CoAP option or in the CoAP payload.<a href="#section-2.2-9" class="pilcrow">¶</a></p>
+<p id="section-2.2-10">Remedy: Any IoT deployment of actuators where freshness is important should use
+the Echo option specified in <span>[<a href="#RFC9175" class="cite xref">RFC9175</a>]</span> unless another
+application specific challenge-response or timestamp mechanism is used.<a href="#section-2.2-10" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="resdelay">
+<section id="section-2.3">
+        <h3 id="name-the-response-delay-and-mism">
+<a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-the-response-delay-and-mism" class="section-name selfRef">The Response Delay and Mismatch Attack</a>
+        </h3>
+<p id="section-2.3-1">The following attack can be performed if an unpatched CoAP implementation
+not following the updated client token processing specified in <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> is
+used with a security protocol where the response is not bound to the request
+in any way except by the CoAP token. This would include most general security protocols, such
+as DTLS, TLS, and IPsec, but not OSCORE. CoAP <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> uses a
+client generated token that the server echoes to match responses to
+request, but does not give any guidelines for the use of token with DTLS
+and TLS, except that the tokens currently "in use" SHOULD (not SHALL) be
+unique. In HTTPS, this type of binding is always assured by the ordered
+and reliable delivery, as well as mandating that the server sends
+responses in the same order that the requests were received.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
+<p id="section-2.3-2">The attacker performs the attack by delaying delivery of a response
+until the client sends a request with the same token, the response will be
+accepted by the client as a valid response to the later request. If CoAP
+is used over a reliable and ordered transport such as TCP with TLS, no messages
+can be delivered before the delayed message. If CoAP is used over an unreliable
+and unordered transport such as UDP with DTLS, other messages can be delivered
+before the delayed message as long as the delayed packet is delivered inside
+the replay window. Note that mismatches can also happen for other reasons
+than a malicious attacker, e.g., delayed delivery or a server sending notifications
+to an uninterested client.<a href="#section-2.3-2" class="pilcrow">¶</a></p>
+<p id="section-2.3-3">The attack can be performed by an attacker on the wire, or an attacker simultaneously
+recording what the server transmits while at the same time jamming the client.
+As (D)TLS encrypts the Token, the attacker needs to predict when the Token is reused.
+How hard that is depends on the CoAP library, but some implementations are known
+to omit the Token as much as possible and others lets the application chose the
+Token. If the response is a "piggybacked response", the client may additionally check
+the Message ID and drop it on mismatch. That doesn't make the attack impossible,
+but lowers the probability.<a href="#section-2.3-3" class="pilcrow">¶</a></p>
+<p id="section-2.3-4">The response delay and mismatch attack is illustrated in <a href="#delayresPUT" class="auto internal xref">Figure 5</a>.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
+<span id="name-delaying-and-mismatching-re"></span><div id="delayresPUT">
+<figure id="figure-5">
+          <div id="section-2.3-5.1">
+            <div class="alignCenter art-svg artwork" id="section-2.3-5.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="352" width="376" viewBox="0 0 376 352" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 32,48 L 32,176" fill="none" stroke="black"></path>
+                <path d="M 32,208 L 32,336" fill="none" stroke="black"></path>
+                <path d="M 96,72 L 96,128" fill="none" stroke="black"></path>
+                <path d="M 96,160 L 96,176" fill="none" stroke="black"></path>
+                <path d="M 96,240 L 96,288" fill="none" stroke="black"></path>
+                <path d="M 96,320 L 96,336" fill="none" stroke="black"></path>
+                <path d="M 160,48 L 160,176" fill="none" stroke="black"></path>
+                <path d="M 160,208 L 160,336" fill="none" stroke="black"></path>
+                <path d="M 32,64 L 152,64" fill="none" stroke="black"></path>
+                <path d="M 112,144 L 160,144" fill="none" stroke="black"></path>
+                <path d="M 32,224 L 80,224" fill="none" stroke="black"></path>
+                <path d="M 40,304 L 88,304" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="160,64 148,58.4 148,69.6" fill="black" transform="rotate(0,152,64)"></polygon>
+                <polygon class="arrowhead" points="120,144 108,138.4 108,149.6" fill="black" transform="rotate(180,112,144)"></polygon>
+                <polygon class="arrowhead" points="88,224 76,218.4 76,229.6" fill="black" transform="rotate(0,80,224)"></polygon>
+                <polygon class="arrowhead" points="48,304 36,298.4 36,309.6" fill="black" transform="rotate(180,40,304)"></polygon>
+                <g class="text">
+                  <text x="28" y="36">Client</text>
+                  <text x="96" y="36">Foe</text>
+                  <text x="164" y="36">Server</text>
+                  <text x="96" y="52">|</text>
+                  <text x="232" y="68">Code:</text>
+                  <text x="276" y="68">0.03</text>
+                  <text x="320" y="68">(PUT)</text>
+                  <text x="56" y="84">PUT</text>
+                  <text x="228" y="84">Token:</text>
+                  <text x="276" y="84">0x77</text>
+                  <text x="216" y="100">Uri-Path:</text>
+                  <text x="276" y="100">lock</text>
+                  <text x="220" y="116">Payload:</text>
+                  <text x="264" y="116">0</text>
+                  <text x="308" y="116">(Unlock)</text>
+                  <text x="96" y="148">@</text>
+                  <text x="232" y="148">Code:</text>
+                  <text x="276" y="148">2.04</text>
+                  <text x="336" y="148">(Changed)</text>
+                  <text x="132" y="164">2.04</text>
+                  <text x="228" y="164">Token:</text>
+                  <text x="276" y="164">0x77</text>
+                  <text x="64" y="196">.....</text>
+                  <text x="128" y="196">.....</text>
+                  <text x="96" y="212">|</text>
+                  <text x="96" y="228">X</text>
+                  <text x="232" y="228">Code:</text>
+                  <text x="276" y="228">0.03</text>
+                  <text x="320" y="228">(PUT)</text>
+                  <text x="56" y="244">PUT</text>
+                  <text x="228" y="244">Token:</text>
+                  <text x="276" y="244">0x77</text>
+                  <text x="216" y="260">Uri-Path:</text>
+                  <text x="276" y="260">lock</text>
+                  <text x="220" y="276">Payload:</text>
+                  <text x="264" y="276">0</text>
+                  <text x="300" y="276">(Lock)</text>
+                  <text x="96" y="308">@</text>
+                  <text x="232" y="308">Code:</text>
+                  <text x="276" y="308">2.04</text>
+                  <text x="336" y="308">(Changed)</text>
+                  <text x="68" y="324">2.04</text>
+                  <text x="228" y="324">Token:</text>
+                  <text x="276" y="324">0x77</text>
+                </g>
+              </svg><a href="#section-2.3-5.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<a href="#name-delaying-and-mismatching-re" class="selfRef">Delaying and mismatching response to PUT</a>
+          </figcaption></figure>
+</div>
+<p id="section-2.3-6">If we once again take a lock as an example, the security consequences may
+be severe as the client receives a response message likely to be interpreted
+as confirmation of a locked door, while the received response message is
+in fact confirming an earlier unlock of the door. As the client is likely
+to leave the (believed to be locked) door unattended, the attacker may enter
+the home, enterprise, or car protected by the lock.<a href="#section-2.3-6" class="pilcrow">¶</a></p>
+<p id="section-2.3-7">The same attack may be performed on sensors. As illustrated in <a href="#delayresGET" class="auto internal xref">Figure 6</a>, an attacker may convince the client
+that the lock is locked, when it in fact is not. The "Unlock" request
+may also be sent by another client authorized to control the lock.<a href="#section-2.3-7" class="pilcrow">¶</a></p>
+<span id="name-delaying-and-mismatching-res"></span><div id="delayresGET">
+<figure id="figure-6">
+          <div id="section-2.3-8.1">
+            <div class="alignCenter art-svg artwork" id="section-2.3-8.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="448" width="376" viewBox="0 0 376 448" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 32,48 L 32,432" fill="none" stroke="black"></path>
+                <path d="M 96,72 L 96,112" fill="none" stroke="black"></path>
+                <path d="M 96,144 L 96,184" fill="none" stroke="black"></path>
+                <path d="M 96,200 L 96,256" fill="none" stroke="black"></path>
+                <path d="M 96,288 L 96,304" fill="none" stroke="black"></path>
+                <path d="M 96,336 L 96,368" fill="none" stroke="black"></path>
+                <path d="M 96,400 L 96,432" fill="none" stroke="black"></path>
+                <path d="M 160,48 L 160,432" fill="none" stroke="black"></path>
+                <path d="M 32,64 L 152,64" fill="none" stroke="black"></path>
+                <path d="M 112,128 L 160,128" fill="none" stroke="black"></path>
+                <path d="M 32,192 L 152,192" fill="none" stroke="black"></path>
+                <path d="M 112,272 L 160,272" fill="none" stroke="black"></path>
+                <path d="M 32,320 L 80,320" fill="none" stroke="black"></path>
+                <path d="M 40,384 L 88,384" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="160,192 148,186.4 148,197.6" fill="black" transform="rotate(0,152,192)"></polygon>
+                <polygon class="arrowhead" points="160,64 148,58.4 148,69.6" fill="black" transform="rotate(0,152,64)"></polygon>
+                <polygon class="arrowhead" points="120,272 108,266.4 108,277.6" fill="black" transform="rotate(180,112,272)"></polygon>
+                <polygon class="arrowhead" points="120,128 108,122.4 108,133.6" fill="black" transform="rotate(180,112,128)"></polygon>
+                <polygon class="arrowhead" points="88,320 76,314.4 76,325.6" fill="black" transform="rotate(0,80,320)"></polygon>
+                <polygon class="arrowhead" points="48,384 36,378.4 36,389.6" fill="black" transform="rotate(180,40,384)"></polygon>
+                <g class="text">
+                  <text x="28" y="36">Client</text>
+                  <text x="96" y="36">Foe</text>
+                  <text x="164" y="36">Server</text>
+                  <text x="96" y="52">|</text>
+                  <text x="232" y="68">Code:</text>
+                  <text x="276" y="68">0.01</text>
+                  <text x="320" y="68">(GET)</text>
+                  <text x="56" y="84">GET</text>
+                  <text x="228" y="84">Token:</text>
+                  <text x="276" y="84">0x77</text>
+                  <text x="216" y="100">Uri-Path:</text>
+                  <text x="276" y="100">lock</text>
+                  <text x="96" y="132">@</text>
+                  <text x="232" y="132">Code:</text>
+                  <text x="276" y="132">2.05</text>
+                  <text x="336" y="132">(Content)</text>
+                  <text x="132" y="148">2.05</text>
+                  <text x="228" y="148">Token:</text>
+                  <text x="276" y="148">0x77</text>
+                  <text x="220" y="164">Payload:</text>
+                  <text x="264" y="164">1</text>
+                  <text x="308" y="164">(Locked)</text>
+                  <text x="232" y="196">Code:</text>
+                  <text x="276" y="196">0.03</text>
+                  <text x="320" y="196">(PUT)</text>
+                  <text x="56" y="212">PUT</text>
+                  <text x="228" y="212">Token:</text>
+                  <text x="276" y="212">0x34</text>
+                  <text x="216" y="228">Uri-Path:</text>
+                  <text x="276" y="228">lock</text>
+                  <text x="220" y="244">Payload:</text>
+                  <text x="264" y="244">1</text>
+                  <text x="308" y="244">(Unlock)</text>
+                  <text x="96" y="276">X</text>
+                  <text x="232" y="276">Code:</text>
+                  <text x="276" y="276">2.04</text>
+                  <text x="336" y="276">(Changed)</text>
+                  <text x="132" y="292">2.04</text>
+                  <text x="228" y="292">Token:</text>
+                  <text x="276" y="292">0x34</text>
+                  <text x="96" y="324">X</text>
+                  <text x="232" y="324">Code:</text>
+                  <text x="276" y="324">0.01</text>
+                  <text x="320" y="324">(GET)</text>
+                  <text x="56" y="340">GET</text>
+                  <text x="228" y="340">Token:</text>
+                  <text x="276" y="340">0x77</text>
+                  <text x="216" y="356">Uri-Path:</text>
+                  <text x="276" y="356">lock</text>
+                  <text x="96" y="388">@</text>
+                  <text x="232" y="388">Code:</text>
+                  <text x="276" y="388">2.05</text>
+                  <text x="336" y="388">(Content)</text>
+                  <text x="68" y="404">2.05</text>
+                  <text x="228" y="404">Token:</text>
+                  <text x="276" y="404">0x77</text>
+                  <text x="220" y="420">Payload:</text>
+                  <text x="264" y="420">1</text>
+                  <text x="308" y="420">(Locked)</text>
+                </g>
+              </svg><a href="#section-2.3-8.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-delaying-and-mismatching-res" class="selfRef">Delaying and mismatching response to GET</a>
+          </figcaption></figure>
+</div>
+<p id="section-2.3-9">As illustrated in <a href="#delayresother" class="auto internal xref">Figure 7</a>, an attacker may even mix
+responses from different resources as long as the two resources share
+the same (D)TLS connection on some part of the path towards the
+client. This can happen if the resources are located behind a common
+gateway, or are served by the same CoAP proxy. An on-path attacker
+(not necessarily a (D)TLS endpoint such as a proxy) may e.g., deceive a
+client that the living room is on fire by responding with an earlier
+delayed response from the oven (temperatures in degree Celsius).<a href="#section-2.3-9" class="pilcrow">¶</a></p>
+<span id="name-delaying-and-mismatching-resp"></span><div id="delayresother">
+<figure id="figure-7">
+          <div id="section-2.3-10.1">
+            <div class="alignCenter art-svg artwork" id="section-2.3-10.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="352" width="440" viewBox="0 0 440 352" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 32,48 L 32,176" fill="none" stroke="black"></path>
+                <path d="M 32,208 L 32,336" fill="none" stroke="black"></path>
+                <path d="M 96,72 L 96,112" fill="none" stroke="black"></path>
+                <path d="M 96,144 L 96,176" fill="none" stroke="black"></path>
+                <path d="M 96,240 L 96,272" fill="none" stroke="black"></path>
+                <path d="M 96,304 L 96,336" fill="none" stroke="black"></path>
+                <path d="M 160,48 L 160,176" fill="none" stroke="black"></path>
+                <path d="M 160,208 L 160,336" fill="none" stroke="black"></path>
+                <path d="M 32,64 L 152,64" fill="none" stroke="black"></path>
+                <path d="M 112,128 L 160,128" fill="none" stroke="black"></path>
+                <path d="M 32,224 L 80,224" fill="none" stroke="black"></path>
+                <path d="M 40,288 L 88,288" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="160,64 148,58.4 148,69.6" fill="black" transform="rotate(0,152,64)"></polygon>
+                <polygon class="arrowhead" points="120,128 108,122.4 108,133.6" fill="black" transform="rotate(180,112,128)"></polygon>
+                <polygon class="arrowhead" points="88,224 76,218.4 76,229.6" fill="black" transform="rotate(0,80,224)"></polygon>
+                <polygon class="arrowhead" points="48,288 36,282.4 36,293.6" fill="black" transform="rotate(180,40,288)"></polygon>
+                <g class="text">
+                  <text x="28" y="36">Client</text>
+                  <text x="96" y="36">Foe</text>
+                  <text x="164" y="36">Server</text>
+                  <text x="96" y="52">|</text>
+                  <text x="232" y="68">Code:</text>
+                  <text x="276" y="68">0.01</text>
+                  <text x="320" y="68">(GET)</text>
+                  <text x="56" y="84">GET</text>
+                  <text x="228" y="84">Token:</text>
+                  <text x="276" y="84">0x77</text>
+                  <text x="216" y="100">Uri-Path:</text>
+                  <text x="324" y="100">oven/temperature</text>
+                  <text x="96" y="132">@</text>
+                  <text x="232" y="132">Code:</text>
+                  <text x="276" y="132">2.05</text>
+                  <text x="336" y="132">(Content)</text>
+                  <text x="132" y="148">2.05</text>
+                  <text x="228" y="148">Token:</text>
+                  <text x="276" y="148">0x77</text>
+                  <text x="220" y="164">Payload:</text>
+                  <text x="272" y="164">225</text>
+                  <text x="64" y="196">.....</text>
+                  <text x="128" y="196">.....</text>
+                  <text x="96" y="212">|</text>
+                  <text x="96" y="228">X</text>
+                  <text x="232" y="228">Code:</text>
+                  <text x="276" y="228">0.01</text>
+                  <text x="320" y="228">(GET)</text>
+                  <text x="56" y="244">GET</text>
+                  <text x="228" y="244">Token:</text>
+                  <text x="276" y="244">0x77</text>
+                  <text x="216" y="260">Uri-Path:</text>
+                  <text x="348" y="260">livingroom/temperature</text>
+                  <text x="96" y="292">@</text>
+                  <text x="232" y="292">Code:</text>
+                  <text x="276" y="292">2.05</text>
+                  <text x="336" y="292">(Content)</text>
+                  <text x="68" y="308">2.05</text>
+                  <text x="228" y="308">Token:</text>
+                  <text x="276" y="308">0x77</text>
+                  <text x="220" y="324">Payload:</text>
+                  <text x="272" y="324">225</text>
+                </g>
+              </svg><a href="#section-2.3-10.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
+<a href="#name-delaying-and-mismatching-resp" class="selfRef">Delaying and mismatching response from other resource</a>
+          </figcaption></figure>
+</div>
+<p id="section-2.3-11">Remedy: Section 4.2 of <span>[<a href="#RFC9175" class="cite xref">RFC9175</a>]</span> formally updates the client token processing for CoAP <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>.
+Using a patched CoAP implementation following the updated processing completely mitigates the attack.<a href="#section-2.3-11" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="fragment">
+<section id="section-2.4">
+        <h3 id="name-the-request-fragment-rearra">
+<a href="#section-2.4" class="section-number selfRef">2.4. </a><a href="#name-the-request-fragment-rearra" class="section-name selfRef">The Request Fragment Rearrangement Attack</a>
+        </h3>
+<p id="section-2.4-1">These attack scenarios show that the Request Delay and Blocking Attacks can
+be
+used against block-wise transfers to cause unauthorized operations to be
+performed on the server, and responses to unauthorized operations to be
+mistaken for responses to authorized operations.
+The combination of these attacks is described as a separate attack because
+it makes the Request Delay Attack
+relevant to systems that are otherwise not time-dependent, which means that
+they could disregard the Request Delay Attack.<a href="#section-2.4-1" class="pilcrow">¶</a></p>
+<p id="section-2.4-2">This attack works even if the individual request/response pairs are encrypted,
+authenticated and protected against the Response Delay and Mismatch Attack,
+provided the attacker is on the network path and can correctly guess which
+operations the respective packages belong to.<a href="#section-2.4-2" class="pilcrow">¶</a></p>
+<p id="section-2.4-3">The attacks can be performed on any security protocol where the attacker can
+delay the delivery of a message unnoticed. This includes DTLS, IPsec, and most OSCORE
+configurations. The attacks does not work on TCP with TLS or OSCORE (with
+TLS-like sequence number handling) as in these cases no messages can be
+delivered before the delayed message.<a href="#section-2.4-3" class="pilcrow">¶</a></p>
+<p id="section-2.4-4">This section primarily concerns itself with the regular block-wise mechanism defined in <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>.
+The special-purpose Q-Block mechanism of <span>[<a href="#RFC9177" class="cite xref">RFC9177</a>]</span>
+already mandates the mitigations that were introduced in <span>[<a href="#RFC9175" class="cite xref">RFC9175</a>]</span>.<a href="#section-2.4-4" class="pilcrow">¶</a></p>
+<div id="fragment-earlierfinal">
+<section id="section-2.4.1">
+          <h4 id="name-completing-an-operation-wit">
+<a href="#section-2.4.1" class="section-number selfRef">2.4.1. </a><a href="#name-completing-an-operation-wit" class="section-name selfRef">Completing an Operation with an Earlier Final Block</a>
+          </h4>
+<p id="section-2.4.1-1">In this scenario (illustrated in <a href="#promotevaljean" class="auto internal xref">Figure 8</a>), blocks from two
+operations on a POST-accepting resource are combined to make the
+server execute an action that was not intended by the authorized
+client. This works only if the client attempts a second operation
+after the first operation failed (due to what the attacker made appear
+like a network outage) within the replay window. The client does not
+receive a confirmation on the second operation either, but, by the
+time the client acts on it, the server has already executed the
+unauthorized action.<a href="#section-2.4.1-1" class="pilcrow">¶</a></p>
+<span id="name-completing-an-operation-with"></span><div id="promotevaljean">
+<figure id="figure-8">
+            <div id="section-2.4.1-2.1">
+              <div class="alignLeft art-svg artwork" id="section-2.4.1-2.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="384" width="560" viewBox="0 0 560 384" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                  <path d="M 32,48 L 32,176" fill="none" stroke="black"></path>
+                  <path d="M 32,240 L 32,368" fill="none" stroke="black"></path>
+                  <path d="M 160,48 L 160,176" fill="none" stroke="black"></path>
+                  <path d="M 160,240 L 160,368" fill="none" stroke="black"></path>
+                  <path d="M 32,64 L 152,64" fill="none" stroke="black"></path>
+                  <path d="M 40,96 L 160,96" fill="none" stroke="black"></path>
+                  <path d="M 32,128 L 80,128" fill="none" stroke="black"></path>
+                  <path d="M 32,160 L 80,160" fill="none" stroke="black"></path>
+                  <path d="M 32,256 L 152,256" fill="none" stroke="black"></path>
+                  <path d="M 112,288 L 160,288" fill="none" stroke="black"></path>
+                  <path d="M 104,320 L 152,320" fill="none" stroke="black"></path>
+                  <path d="M 112,352 L 160,352" fill="none" stroke="black"></path>
+                  <polygon class="arrowhead" points="160,320 148,314.4 148,325.6" fill="black" transform="rotate(0,152,320)"></polygon>
+                  <polygon class="arrowhead" points="160,256 148,250.4 148,261.6" fill="black" transform="rotate(0,152,256)"></polygon>
+                  <polygon class="arrowhead" points="160,64 148,58.4 148,69.6" fill="black" transform="rotate(0,152,64)"></polygon>
+                  <polygon class="arrowhead" points="120,352 108,346.4 108,357.6" fill="black" transform="rotate(180,112,352)"></polygon>
+                  <polygon class="arrowhead" points="120,288 108,282.4 108,293.6" fill="black" transform="rotate(180,112,288)"></polygon>
+                  <polygon class="arrowhead" points="88,160 76,154.4 76,165.6" fill="black" transform="rotate(0,80,160)"></polygon>
+                  <polygon class="arrowhead" points="88,128 76,122.4 76,133.6" fill="black" transform="rotate(0,80,128)"></polygon>
+                  <polygon class="arrowhead" points="48,96 36,90.4 36,101.6" fill="black" transform="rotate(180,40,96)"></polygon>
+                  <g class="text">
+                    <text x="28" y="36">Client</text>
+                    <text x="96" y="36">Foe</text>
+                    <text x="164" y="36">Server</text>
+                    <text x="96" y="52">|</text>
+                    <text x="212" y="68">POST</text>
+                    <text x="288" y="68">"incarcerate"</text>
+                    <text x="380" y="68">(Block1:</text>
+                    <text x="428" y="68">0,</text>
+                    <text x="460" y="68">more</text>
+                    <text x="492" y="68">to</text>
+                    <text x="528" y="68">come)</text>
+                    <text x="96" y="84">|</text>
+                    <text x="212" y="100">2.31</text>
+                    <text x="268" y="100">Continue</text>
+                    <text x="340" y="100">(Block1:</text>
+                    <text x="384" y="100">0</text>
+                    <text x="432" y="100">received,</text>
+                    <text x="492" y="100">send</text>
+                    <text x="536" y="100">more)</text>
+                    <text x="96" y="116">|</text>
+                    <text x="96" y="132">@</text>
+                    <text x="212" y="132">POST</text>
+                    <text x="272" y="132">"valjean"</text>
+                    <text x="348" y="132">(Block1:</text>
+                    <text x="396" y="132">1,</text>
+                    <text x="428" y="132">last</text>
+                    <text x="476" y="132">block)</text>
+                    <text x="96" y="148">|</text>
+                    <text x="96" y="164">X</text>
+                    <text x="208" y="164">All</text>
+                    <text x="288" y="164">retransmissions</text>
+                    <text x="384" y="164">dropped</text>
+                    <text x="96" y="180">|</text>
+                    <text x="36" y="212">(Client:</text>
+                    <text x="92" y="212">Odd,</text>
+                    <text x="128" y="212">but</text>
+                    <text x="168" y="212">let's</text>
+                    <text x="204" y="212">go</text>
+                    <text x="228" y="212">on</text>
+                    <text x="256" y="212">and</text>
+                    <text x="304" y="212">promote</text>
+                    <text x="368" y="212">Javert)</text>
+                    <text x="96" y="244">|</text>
+                    <text x="212" y="260">POST</text>
+                    <text x="272" y="260">"promote"</text>
+                    <text x="348" y="260">(Block1:</text>
+                    <text x="396" y="260">0,</text>
+                    <text x="428" y="260">more</text>
+                    <text x="460" y="260">to</text>
+                    <text x="496" y="260">come)</text>
+                    <text x="96" y="276">|</text>
+                    <text x="96" y="292">X</text>
+                    <text x="212" y="292">2.31</text>
+                    <text x="268" y="292">Continue</text>
+                    <text x="340" y="292">(Block1:</text>
+                    <text x="384" y="292">0</text>
+                    <text x="432" y="292">received,</text>
+                    <text x="492" y="292">send</text>
+                    <text x="536" y="292">more)</text>
+                    <text x="96" y="308">|</text>
+                    <text x="96" y="324">@</text>
+                    <text x="212" y="324">POST</text>
+                    <text x="272" y="324">"valjean"</text>
+                    <text x="348" y="324">(Block1:</text>
+                    <text x="396" y="324">1,</text>
+                    <text x="428" y="324">last</text>
+                    <text x="476" y="324">block)</text>
+                    <text x="96" y="340">|</text>
+                    <text x="96" y="356">X</text>
+                    <text x="212" y="356">2.04</text>
+                    <text x="264" y="356">Valjean</text>
+                    <text x="332" y="356">Promoted</text>
+                    <text x="96" y="372">|</text>
+                  </g>
+                </svg><a href="#section-2.4.1-2.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
+<a href="#name-completing-an-operation-with" class="selfRef">Completing an operation with an earlier final block</a>
+            </figcaption></figure>
+</div>
+<p id="section-2.4.1-3">Remedy: If a client starts new block-wise operations on a security
+context that has lost packets, it needs to label the fragments in
+such a way that the server will not mix them up.<a href="#section-2.4.1-3" class="pilcrow">¶</a></p>
+<p id="section-2.4.1-4">A mechanism to that effect is described as Request-Tag
+<span>[<a href="#RFC9175" class="cite xref">RFC9175</a>]</span>. Had it been in place in the
+example and used for body integrity protection, the client would have
+set the Request-Tag option in the "promote" request.
+Depending on the server's capabilities and setup, either of four
+outcomes could have occurred:<a href="#section-2.4.1-4" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-2.4.1-5">
+<li id="section-2.4.1-5.1">The server could have processed the reinjected POST "valjean" as belonging
+to the original "incarcerate" block; that's the expected case when the server
+can handle simultaneous block transfers.<a href="#section-2.4.1-5.1" class="pilcrow">¶</a>
+</li>
+            <li id="section-2.4.1-5.2">The server could respond 5.03 Service Unavailable, including a Max-Age option
+indicating how
+long it prefers not to take any requests that force it to overwrite the state
+kept for the "incarcerate" request.<a href="#section-2.4.1-5.2" class="pilcrow">¶</a>
+</li>
+            <li id="section-2.4.1-5.3">The server could decide to drop the state kept for the
+"incarcerate" request's state, and process the "promote"
+request. The reinjected POST "valjean" will then fail with 4.08
+Request Entity incomplete, indicating that the server does not have
+the start of the operation anymore.<a href="#section-2.4.1-5.3" class="pilcrow">¶</a>
+</li>
+          </ol>
+</section>
+</div>
+<div id="injecting-a-withheld-first-block">
+<section id="section-2.4.2">
+          <h4 id="name-injecting-a-withheld-first-">
+<a href="#section-2.4.2" class="section-number selfRef">2.4.2. </a><a href="#name-injecting-a-withheld-first-" class="section-name selfRef">Injecting a Withheld First Block</a>
+          </h4>
+<p id="section-2.4.2-1">If the first block of a request is withheld by the attacker for later use,
+it can be used to have the server process a different request body than
+intended by the client. Unlike in the previous scenario, it will return a
+response based on that body to the client.<a href="#section-2.4.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.4.2-2">Again, a first operation (that would go like “Girl stole
+apple. What shall we do with her?” – “Set her free.”) is aborted by
+the proxy, and a part of that operation is later used in a different
+operation to prime the server for responding leniently to another
+operation that would originally have been “Evil Queen poisoned apple. What
+shall we do with her?” – “Lock her up.”. The attack is illustrated in
+<a href="#freethequeen" class="auto internal xref">Figure 9</a>.<a href="#section-2.4.2-2" class="pilcrow">¶</a></p>
+<span id="name-injecting-a-withheld-first-b"></span><div id="freethequeen">
+<figure id="figure-9">
+            <div id="section-2.4.2-3.1">
+              <div class="alignLeft art-svg artwork" id="section-2.4.2-3.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="448" width="560" viewBox="0 0 560 448" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                  <path d="M 32,48 L 32,80" fill="none" stroke="black"></path>
+                  <path d="M 32,160 L 32,432" fill="none" stroke="black"></path>
+                  <path d="M 96,184 L 96,208" fill="none" stroke="black"></path>
+                  <path d="M 96,272 L 96,288" fill="none" stroke="black"></path>
+                  <path d="M 96,376 L 96,408" fill="none" stroke="black"></path>
+                  <path d="M 160,48 L 160,80" fill="none" stroke="black"></path>
+                  <path d="M 160,160 L 160,432" fill="none" stroke="black"></path>
+                  <path d="M 32,64 L 80,64" fill="none" stroke="black"></path>
+                  <path d="M 32,176 L 152,176" fill="none" stroke="black"></path>
+                  <path d="M 112,224 L 160,224" fill="none" stroke="black"></path>
+                  <path d="M 104,256 L 152,256" fill="none" stroke="black"></path>
+                  <path d="M 112,304 L 160,304" fill="none" stroke="black"></path>
+                  <path d="M 40,336 L 88,336" fill="none" stroke="black"></path>
+                  <path d="M 32,368 L 152,368" fill="none" stroke="black"></path>
+                  <path d="M 40,416 L 160,416" fill="none" stroke="black"></path>
+                  <polygon class="arrowhead" points="160,368 148,362.4 148,373.6" fill="black" transform="rotate(0,152,368)"></polygon>
+                  <polygon class="arrowhead" points="160,256 148,250.4 148,261.6" fill="black" transform="rotate(0,152,256)"></polygon>
+                  <polygon class="arrowhead" points="160,176 148,170.4 148,181.6" fill="black" transform="rotate(0,152,176)"></polygon>
+                  <polygon class="arrowhead" points="120,304 108,298.4 108,309.6" fill="black" transform="rotate(180,112,304)"></polygon>
+                  <polygon class="arrowhead" points="120,224 108,218.4 108,229.6" fill="black" transform="rotate(180,112,224)"></polygon>
+                  <polygon class="arrowhead" points="88,64 76,58.4 76,69.6" fill="black" transform="rotate(0,80,64)"></polygon>
+                  <polygon class="arrowhead" points="48,416 36,410.4 36,421.6" fill="black" transform="rotate(180,40,416)"></polygon>
+                  <polygon class="arrowhead" points="48,336 36,330.4 36,341.6" fill="black" transform="rotate(180,40,336)"></polygon>
+                  <g class="text">
+                    <text x="28" y="36">Client</text>
+                    <text x="96" y="36">Foe</text>
+                    <text x="164" y="36">Server</text>
+                    <text x="96" y="52">|</text>
+                    <text x="96" y="68">@</text>
+                    <text x="212" y="68">POST</text>
+                    <text x="256" y="68">"Girl</text>
+                    <text x="304" y="68">stole</text>
+                    <text x="356" y="68">apple.</text>
+                    <text x="400" y="68">Wh"</text>
+                    <text x="96" y="84">|</text>
+                    <text x="260" y="84">(Block1:</text>
+                    <text x="308" y="84">0,</text>
+                    <text x="340" y="84">more</text>
+                    <text x="372" y="84">to</text>
+                    <text x="408" y="84">come)</text>
+                    <text x="36" y="116">(Client:</text>
+                    <text x="96" y="116">We'll</text>
+                    <text x="136" y="116">try</text>
+                    <text x="172" y="116">that</text>
+                    <text x="208" y="116">one</text>
+                    <text x="248" y="116">later</text>
+                    <text x="300" y="116">again;</text>
+                    <text x="344" y="116">for</text>
+                    <text x="380" y="116">now,</text>
+                    <text x="412" y="116">we</text>
+                    <text x="444" y="116">have</text>
+                    <text x="504" y="116">something</text>
+                    <text x="20" y="132">more</text>
+                    <text x="76" y="132">urgent:)</text>
+                    <text x="96" y="164">|</text>
+                    <text x="212" y="180">POST</text>
+                    <text x="256" y="180">"Evil</text>
+                    <text x="304" y="180">Queen</text>
+                    <text x="364" y="180">poisoned</text>
+                    <text x="428" y="180">apple.</text>
+                    <text x="472" y="180">Wh"</text>
+                    <text x="260" y="196">(Block1:</text>
+                    <text x="308" y="196">0,</text>
+                    <text x="340" y="196">more</text>
+                    <text x="372" y="196">to</text>
+                    <text x="408" y="196">come)</text>
+                    <text x="96" y="228">@</text>
+                    <text x="212" y="228">2.31</text>
+                    <text x="268" y="228">Continue</text>
+                    <text x="340" y="228">(Block1:</text>
+                    <text x="384" y="228">0</text>
+                    <text x="432" y="228">received,</text>
+                    <text x="492" y="228">send</text>
+                    <text x="536" y="228">more)</text>
+                    <text x="96" y="244">|</text>
+                    <text x="96" y="260">@</text>
+                    <text x="212" y="260">POST</text>
+                    <text x="256" y="260">"Girl</text>
+                    <text x="304" y="260">stole</text>
+                    <text x="356" y="260">apple.</text>
+                    <text x="400" y="260">Wh"</text>
+                    <text x="260" y="276">(Block1:</text>
+                    <text x="308" y="276">0,</text>
+                    <text x="340" y="276">more</text>
+                    <text x="372" y="276">to</text>
+                    <text x="408" y="276">come)</text>
+                    <text x="96" y="308">X</text>
+                    <text x="212" y="308">2.31</text>
+                    <text x="268" y="308">Continue</text>
+                    <text x="340" y="308">(Block1:</text>
+                    <text x="384" y="308">0</text>
+                    <text x="432" y="308">received,</text>
+                    <text x="492" y="308">send</text>
+                    <text x="536" y="308">more)</text>
+                    <text x="96" y="324">|</text>
+                    <text x="96" y="340">@</text>
+                    <text x="212" y="340">2.31</text>
+                    <text x="268" y="340">Continue</text>
+                    <text x="340" y="340">(Block1:</text>
+                    <text x="384" y="340">0</text>
+                    <text x="432" y="340">received,</text>
+                    <text x="492" y="340">send</text>
+                    <text x="536" y="340">more)</text>
+                    <text x="96" y="356">|</text>
+                    <text x="212" y="372">POST</text>
+                    <text x="248" y="372">"at</text>
+                    <text x="288" y="372">shall</text>
+                    <text x="324" y="372">we</text>
+                    <text x="348" y="372">do</text>
+                    <text x="380" y="372">with</text>
+                    <text x="424" y="372">her?"</text>
+                    <text x="260" y="388">(Block1:</text>
+                    <text x="308" y="388">1,</text>
+                    <text x="340" y="388">last</text>
+                    <text x="388" y="388">block)</text>
+                    <text x="212" y="420">2.05</text>
+                    <text x="252" y="420">"Set</text>
+                    <text x="288" y="420">her</text>
+                    <text x="332" y="420">free."</text>
+                    <text x="96" y="436">|</text>
+                    <text x="260" y="436">(Block1:</text>
+                    <text x="304" y="436">1</text>
+                    <text x="352" y="436">received,</text>
+                    <text x="412" y="436">this</text>
+                    <text x="444" y="436">is</text>
+                    <text x="472" y="436">the</text>
+                    <text x="520" y="436">result)</text>
+                  </g>
+                </svg><a href="#section-2.4.2-3.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
+<a href="#name-injecting-a-withheld-first-b" class="selfRef">Injecting a withheld first block</a>
+            </figcaption></figure>
+</div>
+<p id="section-2.4.2-4">The remedy described in <a href="#fragment-earlierfinal" class="auto internal xref">Section 2.4.1</a> works also for this case.
+Note that merely requiring that blocks of an operation should have incrementing sequence numbers
+would be insufficient to remedy this attack.<a href="#section-2.4.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="attack-difficulty">
+<section id="section-2.4.3">
+          <h4 id="name-attack-difficulty">
+<a href="#section-2.4.3" class="section-number selfRef">2.4.3. </a><a href="#name-attack-difficulty" class="section-name selfRef">Attack difficulty</a>
+          </h4>
+<p id="section-2.4.3-1">The success of any fragment rearrangement attack has multiple prerequisites:<a href="#section-2.4.3-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-2.4.3-2.1">
+              <p id="section-2.4.3-2.1.1">A client sends different block-wise requests that are only distinguished by their content.<a href="#section-2.4.3-2.1.1" class="pilcrow">¶</a></p>
+<p id="section-2.4.3-2.1.2">
+This is generally rare in typical CoRE applications,
+but can happen when the bodies of FETCH requests exceed the fragmentation threshold,
+or when SOAP patterns are emulated.<a href="#section-2.4.3-2.1.2" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-2.4.3-2.2">
+              <p id="section-2.4.3-2.2.1">A client starts later block-wise operations after an earlier one has failed.<a href="#section-2.4.3-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-2.4.3-2.2.2">
+This happens regularly as a consequence of operating in a low-power and lossy network:
+Losses can cause failed operation (especially when the network is unavailable for time exceeding the "few expected round-trips" they may be limited to per <span>[<a href="#RFC7959" class="cite xref">RFC7959</a>]</span>),
+and the cost of reestablishing a security context.<a href="#section-2.4.3-2.2.2" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-2.4.3-2.3">
+              <p id="section-2.4.3-2.3.1">The attacker needs to be able to determine which packets contain which fragments.<a href="#section-2.4.3-2.3.1" class="pilcrow">¶</a></p>
+<p id="section-2.4.3-2.3.2">
+This can be achieved by an on-path attacker by observing request timing,
+or simply by observing request sizes in the case when a body is split into precisely two blocks.<a href="#section-2.4.3-2.3.2" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-2.4.3-3">It is <em>not</em> a prerequisite that the resulting misassembled request body is syntactically correct:
+As the server erroneously expects the body to be integrity protected from an authorized source,
+it might be using a parser not suitable for untrusted input.
+Such a parser might crash the server in extreme cases,
+but might also produce a valid but incorrect response to the request the client associates the response with.
+Note that many constrained applications aim to minimize traffic and thus employ compact data formats;
+that compactness leaves little room for syntactically invalid messages.<a href="#section-2.4.3-3" class="pilcrow">¶</a></p>
+<p id="section-2.4.3-4">The attack is easier if the attacker has control over the request bodies
+(which would be the case when a trusted proxy validates the attacker's authorization to perform two given requests,
+and an attack on the path between the proxy and the server recombines the blocks to a semantically different request).
+Attacks of that shape can easily result in reassembled bodies chosen by the attacker,
+but no services are currently known that operate in this way.<a href="#section-2.4.3-4" class="pilcrow">¶</a></p>
+<p id="section-2.4.3-5">Summarizing,
+it is unlikely that an attacker can perform any of the fragment rearrangement attacks on any given system --
+but given the diversity of applications built on CoAP, it is easily to imagine that single applications would be vulnerable.
+As block-wise transfer is a basic feature of CoAP and its details are sometimes hidden behind abstractions or proxies,
+application authors cannot be expected to design their applications with these attacks in mind,
+and mitigation on the protocol level is prudent.<a href="#section-2.4.3-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="the-relay-attack">
+<section id="section-2.5">
+        <h3 id="name-the-relay-attack">
+<a href="#section-2.5" class="section-number selfRef">2.5. </a><a href="#name-the-relay-attack" class="section-name selfRef">The Relay Attack</a>
+        </h3>
+<p id="section-2.5-1">Yet another type of attack can be performed in deployments where actuator
+actions are triggered automatically based on proximity and without any user
+interaction, e.g., a car (the client) constantly polling for the car key (the
+server) and unlocking both doors and engine as soon as the car key responds.
+An attacker (or pair of attackers) may simply relay the CoAP messages out-of-band,
+using for examples some other radio technology. By doing this, the actuator
+(i.e., the car) believes that the client is close by and performs actions
+based on that false assumption. The attack is illustrated in
+<a href="#relay" class="auto internal xref">Figure 10</a>. In this example the car is using an application specific
+challenge-response mechanism transferred as CoAP payloads.<a href="#section-2.5-1" class="pilcrow">¶</a></p>
+<span id="name-relay-attack-the-client-is-"></span><div id="relay">
+<figure id="figure-10">
+          <div id="section-2.5-2.1">
+            <div class="alignCenter art-svg artwork" id="section-2.5-2.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="208" width="560" viewBox="0 0 560 208" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 32,48 L 32,192" fill="none" stroke="black"></path>
+                <path d="M 96,48 L 96,192" fill="none" stroke="black"></path>
+                <path d="M 184,48 L 184,192" fill="none" stroke="black"></path>
+                <path d="M 248,48 L 248,192" fill="none" stroke="black"></path>
+                <path d="M 32,64 L 88,64" fill="none" stroke="black"></path>
+                <path d="M 184,64 L 240,64" fill="none" stroke="black"></path>
+                <path d="M 40,144 L 96,144" fill="none" stroke="black"></path>
+                <path d="M 192,144 L 248,144" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="248,64 236,58.4 236,69.6" fill="black" transform="rotate(0,240,64)"></polygon>
+                <polygon class="arrowhead" points="200,144 188,138.4 188,149.6" fill="black" transform="rotate(180,192,144)"></polygon>
+                <polygon class="arrowhead" points="96,64 84,58.4 84,69.6" fill="black" transform="rotate(0,88,64)"></polygon>
+                <polygon class="arrowhead" points="48,144 36,138.4 36,149.6" fill="black" transform="rotate(180,40,144)"></polygon>
+                <g class="text">
+                  <text x="28" y="36">Client</text>
+                  <text x="96" y="36">Foe</text>
+                  <text x="184" y="36">Foe</text>
+                  <text x="252" y="36">Server</text>
+                  <text x="140" y="68">........</text>
+                  <text x="320" y="68">Code:</text>
+                  <text x="364" y="68">0.02</text>
+                  <text x="412" y="68">(POST)</text>
+                  <text x="60" y="84">POST</text>
+                  <text x="212" y="84">POST</text>
+                  <text x="316" y="84">Token:</text>
+                  <text x="364" y="84">0x3a</text>
+                  <text x="304" y="100">Uri-Path:</text>
+                  <text x="364" y="100">lock</text>
+                  <text x="308" y="116">Payload:</text>
+                  <text x="404" y="116">JwePR2iCe8b0ux</text>
+                  <text x="512" y="116">(Challenge)</text>
+                  <text x="140" y="148">........</text>
+                  <text x="320" y="148">Code:</text>
+                  <text x="364" y="148">2.04</text>
+                  <text x="424" y="148">(Changed)</text>
+                  <text x="68" y="164">2.04</text>
+                  <text x="220" y="164">2.04</text>
+                  <text x="316" y="164">Token:</text>
+                  <text x="364" y="164">0x3a</text>
+                  <text x="308" y="180">Payload:</text>
+                  <text x="404" y="180">RM8i13G8D5vfXK</text>
+                  <text x="508" y="180">(Response)</text>
+                </g>
+              </svg><a href="#section-2.5-2.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
+<a href="#name-relay-attack-the-client-is-" class="selfRef">Relay attack (the client is the actuator)</a>
+          </figcaption></figure>
+</div>
+<p id="section-2.5-3">The consequences may be severe, and in the case of a car, lead to the attacker
+unlocking and driving away with the car, an attack that unfortunately is
+happening in practice. The relay attack is not specific to CoAP.<a href="#section-2.5-3" class="pilcrow">¶</a></p>
+<p id="section-2.5-4">Remedy: Getting a response over a short-range radio cannot be taken as
+proof of proximity and can therefore not be used to take actions based on
+such proximity. Any automatically triggered mechanisms relying on proximity
+need to use other stronger mechanisms to establish proximity. Mechanisms that
+can be used are: measuring the round-trip time and calculating the maximum
+possible distance based on the speed of light, or using radio with an extremely
+short range like NFC (centimeters instead of meters). Another option is to
+include geographical coordinates (from e.g., GPS) in the messages and calculate
+proximity based on these, but in this case the location measurements need to be
+very precise and the system need to make sure that an attacker cannot
+influence the location estimation. Some types of global navigation satellite
+systems (GNSS) receivers are vulnerable to spoofing attacks.<a href="#section-2.5-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="security-considerations">
+<section id="section-3">
+      <h2 id="name-security-considerations">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-3-1">The whole document can be seen as security considerations for CoAP.<a href="#section-3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana-considerations">
+<section id="section-4">
+      <h2 id="name-iana-considerations">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-4-1">This document has no actions for IANA.<a href="#section-4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<section id="section-5">
+      <h2 id="name-informative-references">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+      </h2>
+<dl class="references">
+<dt id="I-D.ietf-lake-edhoc">[I-D.ietf-lake-edhoc]</dt>
+      <dd>
+<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"Ephemeral Diffie-Hellman Over COSE (EDHOC)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lake-edhoc-20</span>, <time datetime="2023-07-07" class="refDate">7 July 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lake-edhoc-20">https://datatracker.ietf.org/doc/html/draft-ietf-lake-edhoc-20</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.irtf-t2trg-amplification-attacks">[I-D.irtf-t2trg-amplification-attacks]</dt>
+      <dd>
+<span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Selander, G.</span>, and <span class="refAuthor">C. Amsüss</span>, <span class="refTitle">"Amplification Attacks Using the Constrained Application Protocol (CoAP)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-irtf-t2trg-amplification-attacks-02</span>, <time datetime="2023-04-12" class="refDate">12 April 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-amplification-attacks-02">https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-amplification-attacks-02</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="NIST-ZT">[NIST-ZT]</dt>
+      <dd>
+<span class="refAuthor">National Institute of Standards and Technology</span>, <span class="refTitle">"Zero Trust Architecture"</span>, <time datetime="2020-08" class="refDate">August 2020</time>, <span>&lt;<a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-207.pdf">https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-207.pdf</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7252">[RFC7252]</dt>
+      <dd>
+<span class="refAuthor">Shelby, Z.</span>, <span class="refAuthor">Hartke, K.</span>, and <span class="refAuthor">C. Bormann</span>, <span class="refTitle">"The Constrained Application Protocol (CoAP)"</span>, <span class="seriesInfo">RFC 7252</span>, <span class="seriesInfo">DOI 10.17487/RFC7252</span>, <time datetime="2014-06" class="refDate">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7252">https://www.rfc-editor.org/rfc/rfc7252</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7959">[RFC7959]</dt>
+      <dd>
+<span class="refAuthor">Bormann, C.</span> and <span class="refAuthor">Z. Shelby, Ed.</span>, <span class="refTitle">"Block-Wise Transfers in the Constrained Application Protocol (CoAP)"</span>, <span class="seriesInfo">RFC 7959</span>, <span class="seriesInfo">DOI 10.17487/RFC7959</span>, <time datetime="2016-08" class="refDate">August 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7959">https://www.rfc-editor.org/rfc/rfc7959</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8323">[RFC8323]</dt>
+      <dd>
+<span class="refAuthor">Bormann, C.</span>, <span class="refAuthor">Lemay, S.</span>, <span class="refAuthor">Tschofenig, H.</span>, <span class="refAuthor">Hartke, K.</span>, <span class="refAuthor">Silverajan, B.</span>, and <span class="refAuthor">B. Raymor, Ed.</span>, <span class="refTitle">"CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets"</span>, <span class="seriesInfo">RFC 8323</span>, <span class="seriesInfo">DOI 10.17487/RFC8323</span>, <time datetime="2018-02" class="refDate">February 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8323">https://www.rfc-editor.org/rfc/rfc8323</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8446">[RFC8446]</dt>
+      <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8446">https://www.rfc-editor.org/rfc/rfc8446</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8613">[RFC8613]</dt>
+      <dd>
+<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J.</span>, <span class="refAuthor">Palombini, F.</span>, and <span class="refAuthor">L. Seitz</span>, <span class="refTitle">"Object Security for Constrained RESTful Environments (OSCORE)"</span>, <span class="seriesInfo">RFC 8613</span>, <span class="seriesInfo">DOI 10.17487/RFC8613</span>, <time datetime="2019-07" class="refDate">July 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8613">https://www.rfc-editor.org/rfc/rfc8613</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9052">[RFC9052]</dt>
+      <dd>
+<span class="refAuthor">Schaad, J.</span>, <span class="refTitle">"CBOR Object Signing and Encryption (COSE): Structures and Process"</span>, <span class="seriesInfo">STD 96</span>, <span class="seriesInfo">RFC 9052</span>, <span class="seriesInfo">DOI 10.17487/RFC9052</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9052">https://www.rfc-editor.org/rfc/rfc9052</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9147">[RFC9147]</dt>
+      <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refAuthor">Tschofenig, H.</span>, and <span class="refAuthor">N. Modadugu</span>, <span class="refTitle">"The Datagram Transport Layer Security (DTLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 9147</span>, <span class="seriesInfo">DOI 10.17487/RFC9147</span>, <time datetime="2022-04" class="refDate">April 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9147">https://www.rfc-editor.org/rfc/rfc9147</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9175">[RFC9175]</dt>
+      <dd>
+<span class="refAuthor">Amsüss, C.</span>, <span class="refAuthor">Preuß Mattsson, J.</span>, and <span class="refAuthor">G. Selander</span>, <span class="refTitle">"Constrained Application Protocol (CoAP): Echo, Request-Tag, and Token Processing"</span>, <span class="seriesInfo">RFC 9175</span>, <span class="seriesInfo">DOI 10.17487/RFC9175</span>, <time datetime="2022-02" class="refDate">February 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9175">https://www.rfc-editor.org/rfc/rfc9175</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9177">[RFC9177]</dt>
+    <dd>
+<span class="refAuthor">Boucadair, M.</span> and <span class="refAuthor">J. Shallow</span>, <span class="refTitle">"Constrained Application Protocol (CoAP) Block-Wise Transfer Options Supporting Robust Transmission"</span>, <span class="seriesInfo">RFC 9177</span>, <span class="seriesInfo">DOI 10.17487/RFC9177</span>, <time datetime="2022-03" class="refDate">March 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9177">https://www.rfc-editor.org/rfc/rfc9177</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+<div id="change-log">
+<section id="appendix-A">
+      <h2 id="name-change-log">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-change-log" class="section-name selfRef">Change log</a>
+      </h2>
+<p id="appendix-A-1">This section is to be removed before publishing as an RFC.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">Changes from -02 to -03:<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-3.1">Renamed "Blocking Attack" to "Selective Blocking Attack", and clarified.<a href="#appendix-A-3.1" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="appendix-A-3.2">Emphasize selectiveness of delay attack.<a href="#appendix-A-3.2" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="appendix-A-3.3">Acknowledge that response-delay-and-mismatch is mitigated with the new token procesing rules.<a href="#appendix-A-3.3" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="appendix-A-3.4">Acknowledge that fragment rearrangement is mitigated with Request-Tag option, as mandatory for Q-Block.<a href="#appendix-A-3.4" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="appendix-A-3.5">Point to DoS mitigation in t2trg-amplification-attacks.<a href="#appendix-A-3.5" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="appendix-A-3.6">Point to NIST requirements on zero trust principles (NIST-ZT).<a href="#appendix-A-3.6" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="appendix-A-3.7">Update acknowledgements.<a href="#appendix-A-3.7" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="appendix-A-3.8">Editorial changes.<a href="#appendix-A-3.8" class="pilcrow">¶</a>
+</li>
+      </ul>
+</section>
+</div>
+<div id="acknowledgements">
+<section id="appendix-B">
+      <h2 id="name-acknowledgements">
+<a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
+      </h2>
+<p id="appendix-B-1">The authors would like to thank
+<span class="contact-name">Carsten Bormann</span>,
+<span class="contact-name">Mohamed Boucadair</span>,
+<span class="contact-name">Klaus Hartke</span>,
+<span class="contact-name">Jaime Jiménez</span>,
+<span class="contact-name">Ari Keränen</span>,
+<span class="contact-name">Matthias Kovatsch</span>,
+<span class="contact-name">Achim Kraus</span>,
+<span class="contact-name">Sandeep Kumar</span>,
+<span class="contact-name">András Méhes</span>,
+and
+<span class="contact-name">Jon Swallow</span>
+for their valuable comments and feedback.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-C">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">John Preuß Mattsson</span></div>
+<div dir="auto" class="left"><span class="org">Ericsson AB</span></div>
+<div dir="auto" class="left"><span class="street-address">SE-164 80 Stockholm</span></div>
+<div dir="auto" class="left"><span class="country-name">Sweden</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:john.mattsson@ericsson.com" class="email">john.mattsson@ericsson.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">John Fornehed</span></div>
+<div dir="auto" class="left"><span class="org">Ericsson AB</span></div>
+<div dir="auto" class="left"><span class="street-address">SE-164 80 Stockholm</span></div>
+<div dir="auto" class="left"><span class="country-name">Sweden</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:john.fornehed@ericsson.com" class="email">john.fornehed@ericsson.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Göran Selander</span></div>
+<div dir="auto" class="left"><span class="org">Ericsson AB</span></div>
+<div dir="auto" class="left"><span class="street-address">SE-164 80 Stockholm</span></div>
+<div dir="auto" class="left"><span class="country-name">Sweden</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:goran.selander@ericsson.com" class="email">goran.selander@ericsson.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Francesca Palombini</span></div>
+<div dir="auto" class="left"><span class="org">Ericsson AB</span></div>
+<div dir="auto" class="left"><span class="street-address">SE-164 80 Stockholm</span></div>
+<div dir="auto" class="left"><span class="country-name">Sweden</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:francesca.palombini@ericsson.com" class="email">francesca.palombini@ericsson.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Christian Amsüss</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:christian@amsuess.com" class="email">christian@amsuess.com</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>

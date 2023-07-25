@@ -1,0 +1,515 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2023-06-18T01:26:25.442628+00:00",
+  "repo": "core-wg/attacks-on-coap",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    },
+    {
+      "name": "close?",
+      "description": "",
+      "color": "fef2c0"
+    }
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDOHUICes5JdiZn",
+      "title": "Comments received during WG adoption call - freshness and recentness",
+      "url": "https://github.com/core-wg/attacks-on-coap/issues/1",
+      "state": "CLOSED",
+      "author": "emanjon",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "emanjon"
+      ],
+      "labels": [
+        "close?"
+      ],
+      "body": "**Henk Birkholz**\r\nhttps://mailarchive.ietf.org/arch/msg/core/ULPpd1BBiouRlS9qJKHmVbcbslo/\r\n\r\nI think you are confusing freshness and recentness, fundamentally.\r\n\r\nFreshness is not connected to recentness, but they are similar - and\r\nthat is the tricky part. Something can be fresh after a huge amount of\r\ntime according to a time-scale (not recent). Something can be stale\r\nafter a tiny amount of time according to a time-scale (recent).\r\nFreshness is a quality of an assertion that expresses that the assertion\r\nstill reflects the state of its subject, at the time of checking it.\r\nFreshness can be very tricky to check. Is that what you want? Probably\r\nnot. My assumption is what you would want is a response with appropriate\r\nrecentness (at least that is how I read your text).",
+      "createdAt": "2022-05-11T11:32:12Z",
+      "updatedAt": "2022-12-23T05:48:29Z",
+      "closedAt": "2022-12-23T05:48:29Z",
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": ".",
+          "createdAt": "2022-05-11T11:32:57Z",
+          "updatedAt": "2022-05-11T11:35:19Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "I don't think neither `freshness` or `recentness` are well defined terms when it comes to security and protocols. The term and the definition might not be perfect but should likely just align with RFC 9175. The CORE WG decided to use the term freshness in RFC 9175, this is a just a companion document to RFC 9175.\r\n\r\nI will check that the text aligns with RFC 9175 and also add a reference to RFC 9175 regarding the definition.\r\n\r\n",
+          "createdAt": "2022-11-09T15:06:44Z",
+          "updatedAt": "2022-11-09T15:06:44Z"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "id": "I_kwDOHUICes5JdjdN",
+      "title": "Comments received during WG adoption call - RFC 7959",
+      "url": "https://github.com/core-wg/attacks-on-coap/issues/2",
+      "state": "CLOSED",
+      "author": "emanjon",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "chrysn",
+        "gselander"
+      ],
+      "labels": [],
+      "body": "**Mohamed Boucadair**\r\nhttps://mailarchive.ietf.org/arch/msg/core/4czSZYmRgMVgRA2d8mVpGUBwD0w/\r\n\r\nIt would helpful to explicit in Section 2.1 that this is about 7959, not the new block (to-be-RFC9177). Assessing the case of the new-block would be useful as well. ",
+      "createdAt": "2022-05-11T11:35:59Z",
+      "updatedAt": "2023-05-20T08:02:25Z",
+      "closedAt": "2023-05-20T08:02:25Z",
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "How does the attacks in draft-ietf-core-attacks-on-coap and the mitigations (Request-tag and ETag processing) defined in RFC 9175 apply to the Q-Block1 and Q-Block2 Options defined in 9177?",
+          "createdAt": "2022-11-09T16:05:40Z",
+          "updatedAt": "2022-11-09T16:05:40Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "@chrysn can you make an update describing how the attacks applies or do not applies to Q-Block1 and Q-Block2 Options defined in 9177?",
+          "createdAt": "2022-11-09T18:00:01Z",
+          "updatedAt": "2022-11-09T18:00:01Z"
+        },
+        {
+          "author": "chrysn",
+          "authorAssociation": "MEMBER",
+          "body": "I'll take that one (and see what is left of #3 after doing that); my current assumption (which I'll check) is that the attack applies likewise. Then, the new text would say \"This is about 7959 blockwise transfer. It applies likewise to 9177\" (if that is true).",
+          "createdAt": "2023-04-17T12:10:42Z",
+          "updatedAt": "2023-04-17T12:10:42Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "@chrysn Achim made the general comment:\r\n\r\n> With a list of preconditions it would be easier to see,\r\n> if a system is affected by that attack or not.\r\n\r\nCheck if preconditions for the fragment attack is stated clearly enough.\r\n",
+          "createdAt": "2023-04-21T07:43:36Z",
+          "updatedAt": "2023-04-21T07:43:36Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "@chrysn @gselander\r\n\r\nDo you think we could fix and close #2 and #3 and submit next week?",
+          "createdAt": "2023-04-26T10:24:50Z",
+          "updatedAt": "2023-04-26T10:24:50Z"
+        },
+        {
+          "author": "chrysn",
+          "authorAssociation": "MEMBER",
+          "body": "Sorry it took longer; there is now https://github.com/core-wg/attacks-on-coap/pull/8.\r\n\r\n> Check if preconditions for the fragment attack is stated clearly enough.\r\n\r\nThe section \"Attack difficulty\" that lists preconditions was already added after Achim's 2022-02 comments, and I think suffices.",
+          "createdAt": "2023-05-15T09:22:41Z",
+          "updatedAt": "2023-05-15T09:22:41Z"
+        },
+        {
+          "author": "chrysn",
+          "authorAssociation": "MEMBER",
+          "body": "Having checked the original comment: I think that once #8 is merged, this issue can be closed.",
+          "createdAt": "2023-05-15T09:23:19Z",
+          "updatedAt": "2023-05-15T09:23:19Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "Closing as #8 has been mergerd",
+          "createdAt": "2023-05-20T08:02:24Z",
+          "updatedAt": "2023-05-20T08:02:24Z"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "id": "I_kwDOHUICes5JdkLq",
+      "title": "Comments received during WG adoption call - Jon Shallow",
+      "url": "https://github.com/core-wg/attacks-on-coap/issues/3",
+      "state": "OPEN",
+      "author": "emanjon",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "chrysn",
+        "gselander"
+      ],
+      "labels": [],
+      "body": "**Jon Swallow**\r\nhttps://mailarchive.ietf.org/arch/msg/core/GNnRO4-iE_jRb5X2HfRtV3c8Sew/\r\n\r\nMed is actually referring to 2.4, but this made me realize there was a trap of seeing Block and hence thinking RFC7959 for 2.1 - \"The Block Attack\" which actually has no reference to CoAP blocks.  A better section title could be \"The Blocking Attack\" and s/Block Attack/Blocking Attack/ elsewhere.\r\n\r\nFor 2.4, \"Fragment\" in terms of CoAP blocks is not defined, and is not used in RFC7959 (RFC7959 refers to fragmentation issues outside of the CoAP layer), so is unclear that \"fragment\" is meant to be referring to a CoAP RFC7959 (or draft-ietf-core-new-block to-be-RFC9177) block.  \r\n\r\nThus, \"2.4. The Request CoAP Block Rearrangement Attack\" is a step in the right direction for me.  Then most of the usage of the word fragment needs to be replaced with block.\r\n\r\nAs a note for mitigating 2.4.1, to-be-RFC9177 requires the use of Request-Tag (https://datatracker.ietf.org/doc/html/draft-ietf-core-new-block#section-4.3) and good use of tokens (https://datatracker.ietf.org/doc/html/draft-ietf-core-new-block#section-6). \r\n\r\nThe lost blocks recovery mechanisms in to-be-RFC9177 mitigate the risk of the wrong block being processed in a request by the server.\r\n\r\nAgain using Block-Wise transfers, there has not been consideration for a delay attack causing the server to send back the wrong data in a BLOCK2 response.  See https://github.com/core-wg/echo-request-tag/issues/77 .  If the attacker delays the first request (which triggers a BLOCK2 response), and then sends it just before/after the second request (also triggering a BLOCK2 response), the request for the next block for, say the second request, from the client may get back the block from either the first or second request.  This can only be mitigated using the Request-Tag on each request, even though BLOCK1 is not being used for the request.  I think this attack also needs to be included.\r\n",
+      "createdAt": "2022-05-11T11:38:35Z",
+      "updatedAt": "2023-06-15T12:32:33Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "https://mailarchive.ietf.org/arch/msg/core/dvPyvSLnQKpeaRUR3AW5h2tn6yQ/\r\n\r\nHi Jon,\r\n\r\nI'm not sure about:\r\n\r\n > Again using Block-Wise transfers, there has not been consideration\r\nfor a delay attack causing the server to send back the wrong data in a\r\nBLOCK2 response.  See\r\nhttps://github.com/core-wg/echo-request-tag/issues/77 .  If the attacker\r\ndelays the first request (which triggers a BLOCK2 response), and then\r\nsends it just before/after the second request (also triggering a BLOCK2\r\nresponse), the request for the next block for, say the second request,\r\nfrom the client may get back the block from either the first or second\r\nrequest.  This can only be mitigated using the Request-Tag on each\r\nrequest, even though BLOCK1 is not being used for the request.  I think\r\nthis attack also needs to be included.\r\n\r\nDoes this refer to RFC7959?\r\n\r\n > may get back the block from either the first or second request.\r\n\r\nBut the response will contain a token, which is used for\r\nrequest-response matching. So, do you assume, that both request are\r\nusing the same token (maybe then more a unintended violation of the\r\ntoken uniqness)?\r\n\r\nbest regards\r\nAchim",
+          "createdAt": "2022-05-11T11:40:18Z",
+          "updatedAt": "2022-05-11T11:40:18Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "https://mailarchive.ietf.org/arch/msg/core/tuI9NNtx5t3NDsK0zfhdvNGCmEg/\r\n\r\nHi Achim,\r\n\r\ndraft-mattsson-core-coap-attacks has a focus on using Request-Tag to mitigate attacks.  Usage of ETag is not mandated in RFC7252 or RFC7959 as far as I can tell (but is in to-be-RFC9177), but using ETag with Block2 mitigates potential attack confusion. See attack below.\r\n\r\nOtherwise, please see inline.\r\n\r\nRegards\r\n\r\nJon\r\n\r\n> -----Original Message-----\r\n> From: Achim Kraus [mailto: [achimkraus@gmx.net](mailto:achimkraus@gmx.net)]\r\n> Sent: 25 February 2022 16:22\r\n> To: [jon@jpshallow.com](mailto:jon@jpshallow.com)\r\n> Cc: [mohamed.boucadair@orange.com](mailto:mohamed.boucadair@orange.com); 'Marco Tiloca'; [core@ietf.org](mailto:core@ietf.org)\r\n> Subject: Re: [core] WG Adoption Call for draft-mattsson-core-coap-attacks\r\n> \r\n> Hi Jon,\r\n> \r\n> I'm not sure about:\r\n> \r\n>  > Again using Block-Wise transfers, there has not been consideration\r\n> for a delay attack causing the server to send back the wrong data in a\r\n> BLOCK2 response.  See\r\n> https://github.com/core-wg/echo-request-tag/issues/77 .  If the attacker\r\n> delays the first request (which triggers a BLOCK2 response), and then\r\n> sends it just before/after the second request (also triggering a BLOCK2\r\n> response), the request for the next block for, say the second request,\r\n> from the client may get back the block from either the first or second\r\n> request.  This can only be mitigated using the Request-Tag on each\r\n> request, even though BLOCK1 is not being used for the request.  I think\r\n> this attack also needs to be included.\r\n> \r\n> Does this refer to RFC7959?\r\n\r\nJon> Yes, as Block2s are being used as well as RFC9175\r\n> \r\n>  > may get back the block from either the first or second request.\r\n> \r\n> But the response will contain a token, which is used for\r\n> request-response matching. So, do you assume, that both request are\r\n> using the same token (maybe then more a unintended violation of the\r\n> token uniqness)?\r\n\r\nJon> No.  I would be expecting the Token to be different in each request that asks for the next payload of the body.  Use of the same Token is not recommended as per RFC9175, but people do not realize that an empty token should not be used across multiple requests (another attack if \"Foe\" was removing tokens as the CoAP packets passed through...).\r\n\r\nJon> Client gets earlier value (ETag not used) against what it thought was the second request.\r\n\r\n```\r\n   Client   Foe   Server\r\n      |      |      |\r\n      +------X      |    POST \"request\" T:1 { \"offset\":0, \"length\":2000}\r\n      |      |      |\r\n      +------------->    POST \"request\" T:2 { \"offset\":4000, \"length\":2000}\r\n      |      |      |\r\n      |      @------>    POST \"request\" T:1 { \"offset\":0, \"length\":2000}\r\n      |      |      |\r\n      <-------------+    2.04 T:2 Block2:0/1/1024 { data containing 4000:1024 }\r\n      |      |      |\r\n      <-------------+    2.04 T:1 Block2:0/1/1024 { data containing 0:1024 }\r\n      |      |      |\r\n      +------------->    POST \"request\" T:3 Block2:0/_/1024\r\n                         server - is this continuation of request using T:1 or T:2 ?\r\n      |      |      |\r\n      <-------------+    2.04 T:3 Block2:1/_/1024 { data containing 1024:2000 }\r\n                         Was this the expected data ?\r\n      |      |      |\r\n\r\n```\r\nThis is fixed if Request differentiating ETag is used in the response. The client may not be able to get the missing secondary block from the alternative request, unless Request-Tag is used in the initial request (hence issue 77).\r\n\r\n~Jon>",
+          "createdAt": "2022-05-11T11:41:24Z",
+          "updatedAt": "2022-05-11T11:41:55Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "I changed \"block attack\" to \"blocking attack\", thanks for the suggestion.\r\n\r\nRight or wrong, the term \"fragment\" is used heavily in RFC 9175 which this is an companion document to. RFC 9175 cannot be changes now. Even if the term is not perfect it might be better for draft-ietf-core-attacks-on-coap to align with RFC 9175.\r\n\r\n@chrysn ?",
+          "createdAt": "2022-11-09T18:31:32Z",
+          "updatedAt": "2022-11-09T18:31:32Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "@chrysn has the comments above been handled?",
+          "createdAt": "2023-05-20T08:03:30Z",
+          "updatedAt": "2023-05-20T08:03:30Z"
+        },
+        {
+          "author": "chrysn",
+          "authorAssociation": "MEMBER",
+          "body": "I think all was addressed, except what I'd address like this:\r\n\r\nA point not discussed in this thread yet was talking about https://github.com/core-wg/echo-request-tag/issues/77 here. I think this would only be an attack if the requests pulling out the remaining body parts after a single-payload request did not carry the request payload -- but they do, so there's no attack per se. *If* a client chooses to try (and the server supports) different concurrent distinct requests on the same resource with the same body, yes there would be confusion, but that is only enabled by Request-Tag being there in the first place, and thus not using a Request-Tag is not an avenue for an attacker, but plainly does not work.\r\n\r\n[edit / added:] Looking at the flow diagram in https://github.com/core-wg/attacks-on-coap/issues/3#issuecomment-1123631550 (originally [in mail](https://mailarchive.ietf.org/arch/msg/core/tuI9NNtx5t3NDsK0zfhdvNGCmEg/)) once more, I think that flow diagram was based on the idea that the request body was not POSTed again in subsequent requests. AIU that is not how block-wise works, so I think my resolution above stands.",
+          "createdAt": "2023-05-24T09:04:00Z",
+          "updatedAt": "2023-05-24T14:02:56Z"
+        },
+        {
+          "author": "mrdeep1",
+          "authorAssociation": "NONE",
+          "body": "With the flow diagram https://github.com/core-wg/attacks-on-coap/issues/3#issuecomment-1123631550 , with concurrent requests being issued and both ETag and Request-Tag not being used, then the server randomly chooses which block to send back and the client associates the (potentially incorrect data) response with the request that it thought it was using for the second block.\r\n\r\nUse of ETag makes sure that the client associates the response with the correct request, but this may be a response to a request for the next block which has not yet been issued.\r\nUse of Request-Tag (but not ETag) means server sends correct next block response, but client might associate it with the wrong request if both next block requests are sent concurrently.\r\nUse of both ETag and Request-Tag means everything correctly matches up, even if attacker re-orders the request sequences.\r\n\r\nSo, for me, without mitigating using both ETag and Request-Tag, it is a valid attack vector if concurrent requests are in use.\r\n",
+          "createdAt": "2023-06-14T09:27:50Z",
+          "updatedAt": "2023-06-14T09:27:50Z"
+        },
+        {
+          "author": "chrysn",
+          "authorAssociation": "MEMBER",
+          "body": "I was about to tell that the flow diagram is broken because it doesn't retransmit the request payload=body when obtaining the responses, but turns out that *is* what 7959 says (\"by sending further requests with the samej options as the initial request and a Block2 Option giving the block number and block size desired\"). I'll have to revisit *a lot* based on that, including this discussion, and whether the provisions of 9175 are sufficient.\r\n\r\n(The weird part with as things are is that the client has no way of knowing whether or not Block2 will happen, so can't take any measures beforehand -- would it need to apply Request-Tag logic to *all* requests?)",
+          "createdAt": "2023-06-14T13:38:52Z",
+          "updatedAt": "2023-06-14T13:38:52Z"
+        },
+        {
+          "author": "mrdeep1",
+          "authorAssociation": "NONE",
+          "body": "Because of this concurrent request issue, I think we need to always send the request with a Request-Tag (unless it is a DELETE) (sensibly limited in size) unless there is absolute knowledge that that the server will never respond with a Block2.\r\n\r\nIf the client is forbidden to do concurrent requests (all previous requests split over multiple blocks are responsed to before a new base request is allowed), then there is no need for Request-Tag.\r\n\r\nI think this is true for TCP as well, even though T:1 and T:2 arrive in the correct order, the server still does not know which request T:3 refers to (could be searching as lifo or fifo).",
+          "createdAt": "2023-06-14T13:58:28Z",
+          "updatedAt": "2023-06-14T13:58:28Z"
+        },
+        {
+          "author": "chrysn",
+          "authorAssociation": "MEMBER",
+          "body": "It's not that bad, fortunately (for it'd mean that *every single request* that carries a request payload needs to have a Request-Tag, adding about 3 bytes to every single message).\r\n\r\nFrom my current understanding, at least in the mode with OSCORE, the regular recycling rules can apply: The only messages where the absent request tag can not be recycled (i.e. the only messages that need something set) are those that are sent while there are unfinished requests to the same server with the same options set. Unfinished here means that no (final, in case of non-traditional responses) response has been received, and requests can also be regarded as finished when the request has moved out of the replay window (which I'm once more glad is mutually agreed on in OSCORE).\r\n\r\nFor DTLS, yikes. As soon as a request gets retransmitted, that request tag is burned.\r\n\r\n... I should probably take this to the mailing list.",
+          "createdAt": "2023-06-15T11:29:32Z",
+          "updatedAt": "2023-06-15T11:29:32Z"
+        },
+        {
+          "author": "mrdeep1",
+          "authorAssociation": "NONE",
+          "body": "> For DTLS, yikes. As soon as a request gets retransmitted, that request tag is burned.\r\n\r\nI don't follow you here with respect to the DTLS case.\r\n\r\nIf DTLS layer is re-transmitting a request packet, then (encrypted) then Request-Tag is unchanged.  Potential issue is when DTLS gives up retrying, but CoAP layer should be told about this.\r\n\r\nIf CoAP is re-transmitting a request packet (triggered as CON) then Request-Tag is unchanged - whether over DTLS or not.  CoAP will then detect transmission failure and recycle Request-Tag if needed.\r\n\r\nThings may get interesting when NON is used and the server elects to not respond (or request/response is dropped somewhere).  Does there need to be a timeout time, or do we following an incrementing method as per Tokens?\r\n\r\nWith CON, if a server elects to not send a response (but sends just an ACK) then there is no formal response that can be interpreted that Request-Tag is finished with.",
+          "createdAt": "2023-06-15T12:03:15Z",
+          "updatedAt": "2023-06-15T12:03:15Z"
+        },
+        {
+          "author": "chrysn",
+          "authorAssociation": "MEMBER",
+          "body": "> If DTLS layer is re-transmitting a request packet, then (encrypted) then Request-Tag is unchanged.\r\n\r\nYes, but you do need to set one. The beauty of Request-Tag is that in the vast majority of cases, you don't really need to set one. (Otherwise, *all* CoAP messages grow by 3 or more bytes compared to pre-2022, which may be acceptable for DOTS cases but not for 6lo cases, where things like EDHOC are fitting very snug).\r\n\r\nDTLS already needs to set long tokens because they have cryptographic relevance, so the tokens are growing, and so are the request tags -- but non-DTLS applications can still get away with 0 or 1 byte tokens, and need to keep their Request-Tag usage at a minimum. (I don't know off my head if it made it into the text, but one way to avoid needing a Request-Tag when one would be due in OSCORE is to just bump the sequence number by 32, so we see it on the wire even more rarely).",
+          "createdAt": "2023-06-15T12:18:01Z",
+          "updatedAt": "2023-06-15T12:18:16Z"
+        },
+        {
+          "author": "mrdeep1",
+          "authorAssociation": "NONE",
+          "body": "Ah - had missed needing bigger tokens/Request-Tags for use with DTLS for better cryptographic security.\r\n\r\nI know Request-Tags are not allowed in responses, but if a server has to respond with a Block2 andthe server knows that the request did not contain a Request-Tag, then it could indicate a pseudo-Request-Tag somehow to use for the ongoing client next-block requests (a Block2-including-Request-Tag-to-use option, or allow Request-Tag to be a response).",
+          "createdAt": "2023-06-15T12:32:32Z",
+          "updatedAt": "2023-06-15T12:32:32Z"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "I_kwDOHUICes5JdlrB",
+      "title": "Comments received during WG adoption call - Section 2.1 The Block Attack",
+      "url": "https://github.com/core-wg/attacks-on-coap/issues/4",
+      "state": "CLOSED",
+      "author": "emanjon",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "emanjon"
+      ],
+      "labels": [],
+      "body": "**Achim Kraus**\r\nhttps://mailarchive.ietf.org/arch/msg/core/_KAqFsWT0-U7AhBTobU-Ar-DZr4/\r\n\r\nI'm not sure, what the purpose of this work would/should be.\r\n\r\nReading\r\n\r\n\"2.  Attacks on CoAP\r\n\r\n2.1.  The Block Attack\r\n\r\n    An on-path attacker can block the delivery of any number of requests\r\n    or responses.  The attack can also be performed by an attacker\r\n    jamming the lower layer radio protocol.\"\r\n\r\nis true for much more protocols, not only CoAP or DTLS. You can even cut\r\nwires. To narrow such a general issues to a statement about a single\r\nprotocol may be a little smelly.\r\n\r\n\"In this document we show that protecting CoAP with a security\r\n    protocol on another layer is not nearly enough to securely control\r\n    actuators (and in many cases sensors) and that secure operation often\r\n    demands far more than the four properties traditionally provided by\r\n    security protocols.\"\r\n\r\nThe document addresses weakness, but it's hard to see, that this\r\nweakness is qualified. Many of the attacks seems to be somehow \"easy for\r\nan on-path-attacker on unecrypted messages\". And, yes could not be\r\nexcluded also for encrypted messages. In my opinion, encryption makes\r\nsuch attacks much harder to apply, less attractive. And so \"not nearly\r\nenough\" seems to be too strong.\r\n\r\nMy impression is, this document puts doubts on using DTLS 1.2.\r\nIt puts threats of unencrypted messages too close to the same (but much\r\nlower) threats using encryption. I would appreciate, if the document is\r\nclearer about that. Not that it turns into a disservice.\r\n",
+      "createdAt": "2022-05-11T11:43:48Z",
+      "updatedAt": "2023-04-20T13:29:59Z",
+      "closedAt": "2023-04-20T13:29:59Z",
+      "comments": []
+    },
+    {
+      "number": 5,
+      "id": "I_kwDOHUICes5WDFMN",
+      "title": "Availability",
+      "url": "https://github.com/core-wg/attacks-on-coap/issues/5",
+      "state": "CLOSED",
+      "author": "emanjon",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "emanjon"
+      ],
+      "labels": [],
+      "body": "Availability is a required property for secure operation which is a bit different from the other properties of confiedentiality, intergrity, and replay.\r\n\r\nAdded availability to the introduction, should be discussed in the body as well where appropriate.",
+      "createdAt": "2022-11-10T10:34:38Z",
+      "updatedAt": "2023-04-20T13:30:00Z",
+      "closedAt": "2023-04-20T13:30:00Z",
+      "comments": [
+        {
+          "author": "chrysn",
+          "authorAssociation": "MEMBER",
+          "body": "AIU this has already been renamed to \"blocking attack\". Given some other comments (#3, #4), it would be good to highlight\r\n* this is a building block (eg. any delays)\r\n* the selectivity (blocking one message and letting through others)",
+          "createdAt": "2023-04-17T12:07:28Z",
+          "updatedAt": "2023-04-17T12:07:28Z"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "id": "I_kwDOHUICes5Z8Kcl",
+      "title": "Comments on Encryption from Achim",
+      "url": "https://github.com/core-wg/attacks-on-coap/issues/6",
+      "state": "CLOSED",
+      "author": "emanjon",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "emanjon"
+      ],
+      "labels": [],
+      "body": "https://mailarchive.ietf.org/arch/msg/core/BOG6xkClHS29vlQqUYaQBwZkB58/\r\n\r\nI appreciate the added statement about encryption in the abstract.\r\nDoes the\r\n\r\n\"Several of the discussed attacks can be mitigated with the solutions in\r\nRFC 9175.\"\r\n\r\nrequire the combination with encryption in order to mitigate the\r\nattacks? I think so.\r\n\r\nOverall, I'm wondering, if the preconditions of such attacks could be\r\ndocumented clearer?\r\n\r\nE.g. assuming an \"on-path-attacker\" RFC 9175 without encryption may be\r\nin vain.\r\n\r\nA couple of attacks assume, that tokens are reused frequently. In my\r\nexperience, that's not the case (except in cases, where someone stick to\r\n(re-)use the empty token to save bandwidth, or reuse tokens for\r\ntesting/debugging). Different tokens and replay-windows are then\r\ncreating also protection in a couple of cases.\r\n\r\nWith a list of preconditions it would be easier to see,\r\nif a system is affected by that attack or not.\r\n\r\nYou added \"availability\", but I miss the see an example, if there\r\nis a specific risk using coap.",
+      "createdAt": "2022-12-23T06:16:14Z",
+      "updatedAt": "2023-04-21T07:50:17Z",
+      "closedAt": "2023-04-21T07:50:17Z",
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "The commit ee4cb90 addresses most of this issue. Remains to clearer document preconditions for attacks.",
+          "createdAt": "2023-04-20T13:31:54Z",
+          "updatedAt": "2023-04-20T13:31:54Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "> A couple of attacks assume, that tokens are reused frequently. In my\r\n> experience, that's not the case (except in cases, where someone stick to\r\n> (re-)use the empty token to save bandwidth, or reuse tokens for\r\n> testing/debugging). Different tokens and replay-windows are then\r\n> creating also protection in a couple of cases.\r\n\r\nMight differ between implementations. Might have been more common in early implementations. I think (re-)using the empty token to save bandwidth has been quite common. Some people thought that was one of the best things in CoAP. Some CoAP libraries let's the application provide the token.\r\n\r\nFrom a security perspective I dont think \"not done frequently\" cut it at all. Nothing wrong with DTLS, but the initial coaps specification allows reuse is a _fundamental_ design flaw equal to if DTLS would reuse its sequence numbers. Somebody of the security analysis was lost when moving from HTTP over TLS to CoAP over DTLS. Luckily it is quite easily fixed.\r\n\r\nWe should make it clear that the attacks refers to unpached coaps implementations. If the updated Token rules are used none of the problems in the remains at all.",
+          "createdAt": "2023-04-21T05:00:50Z",
+          "updatedAt": "2023-04-21T05:00:50Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "> With a list of preconditions it would be easier to see,\r\n> if a system is affected by that attack or not.\r\n\r\nYes, lets try to document that better",
+          "createdAt": "2023-04-21T05:01:24Z",
+          "updatedAt": "2023-04-21T05:01:24Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "Fixed in recent commits to master. Complete changes can be seen in the diff",
+          "createdAt": "2023-04-21T07:50:17Z",
+          "updatedAt": "2023-04-21T07:50:17Z"
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "id": "I_kwDOHUICes5kAk6M",
+      "title": "Mention I-D.irtf-t2trg-amplification-attacks",
+      "url": "https://github.com/core-wg/attacks-on-coap/issues/7",
+      "state": "CLOSED",
+      "author": "emanjon",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-04-21T06:02:20Z",
+      "updatedAt": "2023-04-21T06:17:32Z",
+      "closedAt": "2023-04-21T06:17:32Z",
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "Done in master",
+          "createdAt": "2023-04-21T06:17:32Z",
+          "updatedAt": "2023-04-21T06:17:32Z"
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "id": "I_kwDOHUICes5osELA",
+      "title": "Minor nits",
+      "url": "https://github.com/core-wg/attacks-on-coap/issues/10",
+      "state": "OPEN",
+      "author": "mrdeep1",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "> 2.4.1. Completing an Operation with an Earlier Final Block\r\n> Depending on the server's capabilities and setup, either of four outcomes could have occurred:\r\n\r\nOnly 3 outcomes are described. I suspect the Request-Tag rejection is the forth.\r\n\r\ns/Jon Swallow/Jon Shallow/",
+      "createdAt": "2023-06-14T08:47:25Z",
+      "updatedAt": "2023-06-14T08:47:25Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
+  "pulls": [
+    {
+      "number": 8,
+      "id": "PR_kwDOHUICes5QfeHJ",
+      "title": "blocks: note this is about regular block, q-block already mandates request-tag",
+      "url": "https://github.com/core-wg/attacks-on-coap/pull/8",
+      "state": "MERGED",
+      "author": "chrysn",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "This addresses the \"what about q-block\" part of #2 (I'm not sure if that's all, will check there).",
+      "createdAt": "2023-05-15T09:22:32Z",
+      "updatedAt": "2023-06-11T14:56:31Z",
+      "baseRepository": "core-wg/attacks-on-coap",
+      "baseRefName": "main",
+      "baseRefOid": "5b30003528668064800b4f2df67e6f4105bf8819",
+      "headRepository": "core-wg/attacks-on-coap",
+      "headRefName": "consider-qblock",
+      "headRefOid": "072a37b563313804572379dd763433853d34cd6b",
+      "closedAt": "2023-05-20T08:02:03Z",
+      "mergedAt": "2023-05-20T08:02:03Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "0b4b76ef53066a23034acae985197bd51f5e151d"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 9,
+      "id": "PR_kwDOHUICes5StLO-",
+      "title": "Add changelog section",
+      "url": "https://github.com/core-wg/attacks-on-coap/pull/9",
+      "state": "MERGED",
+      "author": "chrysn",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Before I upload documents I like to update changelogs; using this PR mainly to try building because for some reasons it's broken locally right now.",
+      "createdAt": "2023-06-11T15:14:46Z",
+      "updatedAt": "2023-06-11T18:33:11Z",
+      "baseRepository": "core-wg/attacks-on-coap",
+      "baseRefName": "main",
+      "baseRefOid": "531c9702c338e69de326fa51b3e4a36d3638d721",
+      "headRepository": "core-wg/attacks-on-coap",
+      "headRefName": "add-changelog",
+      "headRefOid": "1acbe284454ff936e378b79e6fef2680064041ae",
+      "closedAt": "2023-06-11T18:33:02Z",
+      "mergedAt": "2023-06-11T18:33:02Z",
+      "mergedBy": "chrysn",
+      "mergeCommit": {
+        "oid": "c7cd447b6d82bc7118c495307277e67620942a1c"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDOHUICes5TKwe1",
+      "title": "Some minor edits to the abstract",
+      "url": "https://github.com/core-wg/attacks-on-coap/pull/11",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-06-16T08:48:16Z",
+      "updatedAt": "2023-06-16T08:48:16Z",
+      "baseRepository": "core-wg/attacks-on-coap",
+      "baseRefName": "main",
+      "baseRefOid": "d5f6ab2a0249f553fc47a0aae642b9e36ffd12e4",
+      "headRepository": "boucadair/attacks-on-coap",
+      "headRefName": "main",
+      "headRefOid": "ec2753d85250b02eb8edde420da4dd9d5df0b65f",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 12,
+      "id": "PR_kwDOHUICes5TKyJl",
+      "title": "normative refs",
+      "url": "https://github.com/core-wg/attacks-on-coap/pull/12",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "I guess this will need to be reassessed based on the progress of the spec, but I think at least the following RFCs have to be listed as normative",
+      "createdAt": "2023-06-16T08:53:59Z",
+      "updatedAt": "2023-06-16T08:53:59Z",
+      "baseRepository": "core-wg/attacks-on-coap",
+      "baseRefName": "main",
+      "baseRefOid": "d5f6ab2a0249f553fc47a0aae642b9e36ffd12e4",
+      "headRepository": "boucadair/attacks-on-coap",
+      "headRefName": "patch-1",
+      "headRefOid": "7ddd95ef78697169e60a36921b6b8246c1905257",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}
