@@ -56,7 +56,7 @@
 \end{frame}
 
 \begin{frame}{Return of the Request Fragment Rearrangement}\large
-	\framesubtitle{Praphrasing dialogue between Jon Shallow and Christian Amsüss}
+	\framesubtitle{Paraphrasing dialogue between Jon Shallow and Christian Amsüss}
 	\begin{itemize}
 		\item[J] That can also happen when there is no Block1 phase.
 		\item[C] No, because then it's concurrent requests, and those don't work without Request-Tag anyway. In the Block2 phase, the request payload is repeated.
@@ -72,24 +72,23 @@
 \begin{frame}[fragile]{Return of the Request Fragment Rearrangement}\small
 	\framesubtitle{Example}
 	\begin{verbatim}
-   Client   Foe   Server
-      |      |      |
-      +------X      |    POST "request" T:1 { "offset":0, "length":2000}
-      |      |      |
-      +------------->    POST "request" T:2 { "offset":4000, "length":2000}
-      |      |      |
-      |      @------>    POST "request" T:1 { "offset":0, "length":2000}
-      |      |      |
-      <-------------+    2.04 T:2 Block2:0/1/1024 { data containing 4000:1024 }
-      |      |      |
-      <-------------+    2.04 T:1 Block2:0/1/1024 { data containing 0:1024 }
-      |      |      |
-      +------------->    POST "request" T:3 Block2:0/_/1024
-                         server - is this continuation of request using T:1 or T:2 ?
-      |      |      |
-      <-------------+    2.04 T:3 Block2:1/_/1024 { data containing 1024:2000 }
-                         Was this the expected data ?
-      |      |      |
+Client   Foe   Server
+   |      |      |
+   +------X      |    POST "request" T:1 { "offset":0, "length":2000}
+   |      |      |
+   +------------->    POST "request" T:2 { "offset":4000, "length":2000}
+   |      |      |
+   |      @------>    POST "request" T:1 { "offset":0, "length":2000}
+   |      |      |
+   <-------------+    2.04 T:2 ETag:A Block2:0/1/1024 { data containing 4000:1024 }
+   |      |      |
+   <-------------+    2.04 T:1 ETag:B Block2:0/1/1024 { data containing 0:1024 }
+   |      |      |
+   +------------->    POST "request" T:3 Block2:0/_/1024
+   |      |      |    server - is this continuation of request using T:1 or T:2?
+   <-------------+    2.04 T:3 ETag:B Block2:1/_/1024 { data containing 1024:2000 }
+   |      |      |    Is this the second half of 0..2000, or did 4000..6000
+   |      |      |    just change?
 	\end{verbatim}
 \end{frame}
 
@@ -121,7 +120,7 @@
 	\ldots But they already tolerate having tokens that practically need to be counting up. How large is the impact really?
 \end{frame}
 
-\begin{frame}{Possible solution B: Allow server to declare Request-Tag}\large
+\begin{frame}{Possible solution B: Allow server to declare Request-Tag for client to use}\large
 	\framesubtitle{Suggestion from Jon}
 
 	Would update \rfc{9175} to allow use in requests.
