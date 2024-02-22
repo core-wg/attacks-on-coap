@@ -5,10 +5,10 @@
 Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               J. Fornehed
 Intended status: Informational                               G. Selander
-Expires: 26 January 2024                                    F. Palombini
+Expires: 25 August 2024                                     F. Palombini
                                                                 Ericsson
                                                                C. Amsüss
-                                                            25 July 2023
+                                                        22 February 2024
 
 
          Attacks on the Constrained Application Protocol (CoAP)
@@ -16,18 +16,17 @@ Expires: 26 January 2024                                    F. Palombini
 
 Abstract
 
-   Being able to securely read information from sensors, to securely
-   control actuators, and to not enable distributed denial-of-service
-   attacks are essential in a world of connected and networking things
-   interacting with the physical world.  Using a security protocol such
-   as DTLS, TLS, or OSCORE to protect CoAP is a requirement for secure
-   operation and protects against many attacks.  This document
-   summarizes a number of known attacks on CoAP deployments and show
-   that just using CoAP with a security protocol like DTLS, TLS, or
-   OSCORE is not always enough for secure operation.  Several of the
-   discussed attacks can be mitigated with a security protocol such as
-   DTLS, TLS, or OSCORE providing confidentiality and integrity combined
-   with the solutions in RFC 9175.
+   Being able to securely retrieve information from sensors and control
+   actuators while providing guards against distributed denial-of-
+   service (DDoS) attacks are key requirements for CoAP deployments.  To
+   that aim, a security protocol (e.g., DTLS, TLS, or OSCORE) can be
+   enabled to ensure secure CoAP operation, including protection against
+   many attacks.  This document identifies a set of known CoAP attacks
+   and shows that simply using CoAP with a security protocol is not
+   always enough for secure operation.  Several of the identified
+   attacks can be mitigated with a security protocol providing
+   confidentiality and integrity combined with the solutions specified
+   in RFC 9175.
 
 About This Document
 
@@ -60,11 +59,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 January 2024.
+   This Internet-Draft will expire on 25 August 2024.
 
 Copyright Notice
 
-   Copyright (c) 2023 IETF Trust and the persons identified as the
+   Copyright (c) 2024 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -821,17 +820,17 @@ Table of Contents
    [I-D.ietf-lake-edhoc]
               Selander, G., Mattsson, J. P., and F. Palombini,
               "Ephemeral Diffie-Hellman Over COSE (EDHOC)", Work in
-              Progress, Internet-Draft, draft-ietf-lake-edhoc-20, 7 July
-              2023, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              lake-edhoc-20>.
+              Progress, Internet-Draft, draft-ietf-lake-edhoc-23, 22
+              January 2024, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-lake-edhoc-23>.
 
    [I-D.irtf-t2trg-amplification-attacks]
               Mattsson, J. P., Selander, G., and C. Amsüss,
               "Amplification Attacks Using the Constrained Application
               Protocol (CoAP)", Work in Progress, Internet-Draft, draft-
-              irtf-t2trg-amplification-attacks-02, 12 April 2023,
+              irtf-t2trg-amplification-attacks-03, 21 February 2024,
               <https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-
-              amplification-attacks-02>.
+              amplification-attacks-03>.
 
    [NIST-ZT]  National Institute of Standards and Technology, "Zero
               Trust Architecture", August 2020,

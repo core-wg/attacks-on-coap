@@ -11,34 +11,31 @@
 <meta content="Francesca Palombini" name="author">
 <meta content="Christian Amsüss" name="author">
 <meta content="
-       Being able to securely read information from sensors, to securely control actuators, and
-to not enable distributed denial-of-service attacks are essential in a world of
-connected and networking things interacting with the physical world. Using a security
-protocol such as DTLS, TLS, or OSCORE to protect CoAP is a requirement for secure operation
-and protects against many attacks. This document summarizes a number of known attacks on CoAP deployments and
-show that just using CoAP with a security protocol like DTLS, TLS, or OSCORE is not
-always enough for secure operation. Several of the discussed attacks can be mitigated
-with a security protocol such as DTLS, TLS, or OSCORE providing confidentiality and
-integrity combined with the solutions in RFC 9175. 
+       Being able to securely retrieve information from sensors and control actuators while providing guards against
+distributed denial-of-service (DDoS) attacks are key requirements for CoAP deployments. To that aim, a security
+protocol (e.g., DTLS, TLS, or OSCORE) can be enabled to ensure secure CoAP operation, including protection against many attacks.
+This document identifies a set of known CoAP attacks and shows that simply using CoAP with a security protocol is not
+always enough for secure operation. Several of the identified attacks can be mitigated
+with a security protocol providing confidentiality and integrity combined with the solutions specified in RFC 9175. 
     " name="description">
-<meta content="xml2rfc 3.17.4" name="generator">
+<meta content="xml2rfc 3.19.4" name="generator">
 <meta name="keyword">
 <meta content="draft-ietf-core-attacks-on-coap-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.17.4
-    Python 3.11.4
-    ConfigArgParse 1.5.3
+  xml2rfc 3.19.4
+    Python 3.11.6
+    ConfigArgParse 1.7
     google-i18n-address 3.1.0
     intervaltree 3.1.0
     Jinja2 3.1.2
     lxml 4.9.3
-    platformdirs 3.9.1
+    platformdirs 4.2.0
     pycountry 22.3.5
-    PyYAML 6.0
+    PyYAML 6.0.1
     requests 2.31.0
-    setuptools 67.7.2
+    setuptools 68.2.2
     six 1.16.0
-    wcwidth 0.2.6
+    wcwidth 0.2.13
 -->
 <link href="draft-ietf-core-attacks-on-coap.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -661,7 +658,7 @@ sub, sup {
 }
 #toc nav li {
   line-height: 1.3em;
-  margin: 0.75em 0;
+  margin: 2px 0;
   padding-left: 1.2em;
   text-indent: -1.2em;
 }
@@ -754,7 +751,7 @@ hr.addr {
     z-index: 2;
     top: 0;
     right: 0;
-    padding: 0;
+    padding: 1px 0 0 0;
     margin: 0;
     border-bottom: 1px solid #ccc;
     opacity: 0.6;
@@ -878,16 +875,13 @@ hr.addr {
     border-top: none;
     padding-top: 0;
   }
-  figure, pre {
+  figure, pre, .vcard {
     page-break-inside: avoid;
-  }
-  figure {
-    overflow: scroll;
   }
   h1, h2, h3, h4, h5, h6 {
     page-break-after: avoid;
   }
-  h2+*, h3+*, h4+*, h5+*, h6+* {
+  :is(h2, h3, h4, h5, h6)+*, dd {
     page-break-before: avoid;
   }
   pre {
@@ -900,6 +894,9 @@ hr.addr {
   }
   td {
     border-top: 1px solid #ddd;
+  }
+  .toplink {
+    display: none;
   }
 }
 
@@ -1001,28 +998,6 @@ address div.right {
   text-align: right;
 }
 
-/* Give the table caption label the same styling as the figcaption */
-
-@media print {
-  .toplink {
-    display: none;
-  }
-
-  /* avoid overwriting the top border line with the ToC header */
-  #toc {
-    padding-top: 1px;
-  }
-
-  /* Avoid page breaks inside dl and author address entries */
-  dd {
-    page-break-before: avoid;
-  }
-  .vcard {
-    page-break-inside: avoid;
-  }
-
-}
-
 /* Dark mode. */
 @media (prefers-color-scheme: dark) {
 :root {
@@ -1059,11 +1034,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Attacks on CoAP</td>
-<td class="right">July 2023</td>
+<td class="right">February 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 26 January 2024</td>
+<td class="center">Expires 25 August 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1076,12 +1051,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-core-attacks-on-coap-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-07-25" class="published">25 July 2023</time>
+<time datetime="2024-02-22" class="published">22 February 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-01-26">26 January 2024</time></dd>
+<dd class="expires"><time datetime="2024-08-25">25 August 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1109,15 +1084,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">Attacks on the Constrained Application Protocol (CoAP)</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">Being able to securely read information from sensors, to securely control actuators, and
-to not enable distributed denial-of-service attacks are essential in a world of
-connected and networking things interacting with the physical world. Using a security
-protocol such as DTLS, TLS, or OSCORE to protect CoAP is a requirement for secure operation
-and protects against many attacks. This document summarizes a number of known attacks on CoAP deployments and
-show that just using CoAP with a security protocol like DTLS, TLS, or OSCORE is not
-always enough for secure operation. Several of the discussed attacks can be mitigated
-with a security protocol such as DTLS, TLS, or OSCORE providing confidentiality and
-integrity combined with the solutions in RFC 9175.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">Being able to securely retrieve information from sensors and control actuators while providing guards against
+distributed denial-of-service (DDoS) attacks are key requirements for CoAP deployments. To that aim, a security
+protocol (e.g., DTLS, TLS, or OSCORE) can be enabled to ensure secure CoAP operation, including protection against many attacks.
+This document identifies a set of known CoAP attacks and shows that simply using CoAP with a security protocol is not
+always enough for secure operation. Several of the identified attacks can be mitigated
+with a security protocol providing confidentiality and integrity combined with the solutions specified in RFC 9175.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1153,7 +1125,7 @@ integrity combined with the solutions in RFC 9175.<a href="#section-abstract-1" 
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 26 January 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 25 August 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1162,7 +1134,7 @@ integrity combined with the solutions in RFC 9175.<a href="#section-abstract-1" 
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2023 IETF Trust and the persons identified as the
+            Copyright (c) 2024 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1261,13 +1233,17 @@ mode does not provide any security as an attacker can easily eavesdrop on all
 messages and forge false requests and responses.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">The four properties traditionally provided by security protocols are:<a href="#section-1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1-3.1">Data confidentiality<a href="#section-1-3.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1-3.1">
+          <p id="section-1-3.1.1">Data confidentiality<a href="#section-1-3.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-3.2">Data origin authentication<a href="#section-1-3.2" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-3.2">
+          <p id="section-1-3.2.1">Data origin authentication<a href="#section-1-3.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-3.3">Data integrity protection<a href="#section-1-3.3" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-3.3">
+          <p id="section-1-3.3.1">Data integrity protection<a href="#section-1-3.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-3.4">Data replay protection<a href="#section-1-3.4" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-3.4">
+          <p id="section-1-3.4.1">Data replay protection<a href="#section-1-3.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-1-4">These four properties should be seen as requirements for Internet-of-Things
@@ -1286,13 +1262,17 @@ can do and discusses tougher requirements and mechanisms to mitigate the
 attacks. In general, secure operation also requires these four
 properties:<a href="#section-1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1-6.1">Availability<a href="#section-1-6.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1-6.1">
+          <p id="section-1-6.1.1">Availability<a href="#section-1-6.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-6.2">Data-to-data binding<a href="#section-1-6.2" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-6.2">
+          <p id="section-1-6.2.1">Data-to-data binding<a href="#section-1-6.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-6.3">Data-to-space binding<a href="#section-1-6.3" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-6.3">
+          <p id="section-1-6.3.1">Data-to-space binding<a href="#section-1-6.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-6.4">Data-to-time binding<a href="#section-1-6.4" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-6.4">
+          <p id="section-1-6.4.1">Data-to-time binding<a href="#section-1-6.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-1-7">Availability means that services and information must be available when needed.
@@ -2176,20 +2156,23 @@ set the Request-Tag option in the "promote" request.
 Depending on the server's capabilities and setup, either of four
 outcomes could have occurred:<a href="#section-2.4.1-4" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-2.4.1-5">
-<li id="section-2.4.1-5.1">The server could have processed the reinjected POST "valjean" as belonging
+<li id="section-2.4.1-5.1">
+              <p id="section-2.4.1-5.1.1">The server could have processed the reinjected POST "valjean" as belonging
 to the original "incarcerate" block; that's the expected case when the server
-can handle simultaneous block transfers.<a href="#section-2.4.1-5.1" class="pilcrow">¶</a>
+can handle simultaneous block transfers.<a href="#section-2.4.1-5.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-2.4.1-5.2">The server could respond 5.03 Service Unavailable, including a Max-Age option
+            <li id="section-2.4.1-5.2">
+              <p id="section-2.4.1-5.2.1">The server could respond 5.03 Service Unavailable, including a Max-Age option
 indicating how
 long it prefers not to take any requests that force it to overwrite the state
-kept for the "incarcerate" request.<a href="#section-2.4.1-5.2" class="pilcrow">¶</a>
+kept for the "incarcerate" request.<a href="#section-2.4.1-5.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-2.4.1-5.3">The server could decide to drop the state kept for the
+            <li id="section-2.4.1-5.3">
+              <p id="section-2.4.1-5.3.1">The server could decide to drop the state kept for the
 "incarcerate" request's state, and process the "promote"
 request. The reinjected POST "valjean" will then fail with 4.08
 Request Entity incomplete, indicating that the server does not have
-the start of the operation anymore.<a href="#section-2.4.1-5.3" class="pilcrow">¶</a>
+the start of the operation anymore.<a href="#section-2.4.1-5.3.1" class="pilcrow">¶</a></p>
 </li>
           </ol>
 </section>
@@ -2509,6 +2492,7 @@ systems (GNSS) receivers are vulnerable to spoofing attacks.<a href="#section-2.
 <p id="section-4-1">This document has no actions for IANA.<a href="#section-4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="sec-informative-references">
 <section id="section-5">
       <h2 id="name-informative-references">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
@@ -2516,11 +2500,11 @@ systems (GNSS) receivers are vulnerable to spoofing attacks.<a href="#section-2.
 <dl class="references">
 <dt id="I-D.ietf-lake-edhoc">[I-D.ietf-lake-edhoc]</dt>
       <dd>
-<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"Ephemeral Diffie-Hellman Over COSE (EDHOC)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lake-edhoc-20</span>, <time datetime="2023-07-07" class="refDate">7 July 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lake-edhoc-20">https://datatracker.ietf.org/doc/html/draft-ietf-lake-edhoc-20</a>&gt;</span>. </dd>
+<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"Ephemeral Diffie-Hellman Over COSE (EDHOC)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lake-edhoc-23</span>, <time datetime="2024-01-22" class="refDate">22 January 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lake-edhoc-23">https://datatracker.ietf.org/doc/html/draft-ietf-lake-edhoc-23</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.irtf-t2trg-amplification-attacks">[I-D.irtf-t2trg-amplification-attacks]</dt>
       <dd>
-<span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Selander, G.</span>, and <span class="refAuthor">C. Amsüss</span>, <span class="refTitle">"Amplification Attacks Using the Constrained Application Protocol (CoAP)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-irtf-t2trg-amplification-attacks-02</span>, <time datetime="2023-04-12" class="refDate">12 April 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-amplification-attacks-02">https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-amplification-attacks-02</a>&gt;</span>. </dd>
+<span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Selander, G.</span>, and <span class="refAuthor">C. Amsüss</span>, <span class="refTitle">"Amplification Attacks Using the Constrained Application Protocol (CoAP)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-irtf-t2trg-amplification-attacks-03</span>, <time datetime="2024-02-21" class="refDate">21 February 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-amplification-attacks-03">https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-amplification-attacks-03</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="NIST-ZT">[NIST-ZT]</dt>
       <dd>
@@ -2564,6 +2548,7 @@ systems (GNSS) receivers are vulnerable to spoofing attacks.<a href="#section-2.
 <dd class="break"></dd>
 </dl>
 </section>
+</div>
 <div id="change-log">
 <section id="appendix-A">
       <h2 id="name-change-log">
@@ -2572,21 +2557,29 @@ systems (GNSS) receivers are vulnerable to spoofing attacks.<a href="#section-2.
 <p id="appendix-A-1">This section is to be removed before publishing as an RFC.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <p id="appendix-A-2">Changes from -02 to -03:<a href="#appendix-A-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-3.1">Renamed "Blocking Attack" to "Selective Blocking Attack", and clarified.<a href="#appendix-A-3.1" class="pilcrow">¶</a>
+<li class="normal" id="appendix-A-3.1">
+          <p id="appendix-A-3.1.1">Renamed "Blocking Attack" to "Selective Blocking Attack", and clarified.<a href="#appendix-A-3.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-3.2">Emphasize selectiveness of delay attack.<a href="#appendix-A-3.2" class="pilcrow">¶</a>
+        <li class="normal" id="appendix-A-3.2">
+          <p id="appendix-A-3.2.1">Emphasize selectiveness of delay attack.<a href="#appendix-A-3.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-3.3">Acknowledge that response-delay-and-mismatch is mitigated with the new token procesing rules.<a href="#appendix-A-3.3" class="pilcrow">¶</a>
+        <li class="normal" id="appendix-A-3.3">
+          <p id="appendix-A-3.3.1">Acknowledge that response-delay-and-mismatch is mitigated with the new token procesing rules.<a href="#appendix-A-3.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-3.4">Acknowledge that fragment rearrangement is mitigated with Request-Tag option, as mandatory for Q-Block.<a href="#appendix-A-3.4" class="pilcrow">¶</a>
+        <li class="normal" id="appendix-A-3.4">
+          <p id="appendix-A-3.4.1">Acknowledge that fragment rearrangement is mitigated with Request-Tag option, as mandatory for Q-Block.<a href="#appendix-A-3.4.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-3.5">Point to DoS mitigation in t2trg-amplification-attacks.<a href="#appendix-A-3.5" class="pilcrow">¶</a>
+        <li class="normal" id="appendix-A-3.5">
+          <p id="appendix-A-3.5.1">Point to DoS mitigation in t2trg-amplification-attacks.<a href="#appendix-A-3.5.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-3.6">Point to NIST requirements on zero trust principles (NIST-ZT).<a href="#appendix-A-3.6" class="pilcrow">¶</a>
+        <li class="normal" id="appendix-A-3.6">
+          <p id="appendix-A-3.6.1">Point to NIST requirements on zero trust principles (NIST-ZT).<a href="#appendix-A-3.6.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-3.7">Update acknowledgements.<a href="#appendix-A-3.7" class="pilcrow">¶</a>
+        <li class="normal" id="appendix-A-3.7">
+          <p id="appendix-A-3.7.1">Update acknowledgements.<a href="#appendix-A-3.7.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-3.8">Editorial changes.<a href="#appendix-A-3.8" class="pilcrow">¶</a>
+        <li class="normal" id="appendix-A-3.8">
+          <p id="appendix-A-3.8.1">Editorial changes.<a href="#appendix-A-3.8.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
