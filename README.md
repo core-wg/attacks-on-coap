@@ -2,8 +2,8 @@
 
 This is the working area for the IETF [CORE Working Group](https://datatracker.ietf.org/wg/core/documents/) Internet-Draft, "Attacks on the Constrained Application Protocol (CoAP)".
 
-* [Editor's Copy HTML](https://core-wg.github.io/attacks-on-coap/#go.draft-ietf-core-attacks-on-coap.html)
-* [Editor's Copy Text](https://core-wg.github.io/attacks-on-coap/#go.draft-ietf-core-attacks-on-coap.txt)
+* [Editor's Copy HTML](https://core-wg.github.io/attacks-on-coap/draft-ietf-core-attacks-on-coap.html)
+* [Editor's Copy Text](https://core-wg.github.io/attacks-on-coap/draft-ietf-core-attacks-on-coap.txt)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-core-attacks-on-coap)
 * [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-core-attacks-on-coap)
 * [Compare Editor's Copy to Working Group Draft](https://core-wg.github.io/attacks-on-coap/#go.draft-ietf-core-attacks-on-coap.diff)
