@@ -61,7 +61,7 @@ informative:
   RFC9147:
   RFC9175:
   RFC9177:
-  I-D.ietf-lake-edhoc:
+  RFC9528:
   I-D.irtf-t2trg-amplification-attacks:
 
   NIST-ZT:
@@ -384,7 +384,7 @@ and server, or by only allowing requests a short period after client
 authentication.
 
 Requiring a fresh client authentication (such as a new TLS/DTLS handshake
-or an EDHOC key exchange {{I-D.ietf-lake-edhoc}}) mitigates the
+or an EDHOC key exchange {{RFC9528}}) mitigates the
 problem, but requires larger messages and more processing
 than a dedicated solution. Security solutions based on exchanging timestamps
 require exactly synchronized time between client and server, and this may
@@ -799,6 +799,14 @@ This document has no actions for IANA.
 
 # Change log
 {: removeInRFC="true"}
+
+Changes from -04 to -05:
+
+* Updated reference to EDHOC which is now RFC 9528
+
+Changes from -03 to -04:
+
+* Rewritten abstract
 
 Changes from -02 to -03:
 
