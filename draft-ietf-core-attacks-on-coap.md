@@ -465,7 +465,7 @@ Client    Foe    Server
    +-----> X       |      Code: 0.03 (PUT)
    | PUT   |       |     Token: 0x77
    |       |       |  Uri-Path: lock
-   |       |       |   Payload: 0 (Lock)
+   |       |       |   Payload: 1 (Lock)
    |       |       |
    |<------@       |      Code: 2.04 (Changed)
    |  2.04 |       |     Token: 0x77
@@ -498,7 +498,7 @@ Client    Foe    Server
    +-------------->|      Code: 0.03 (PUT)
    | PUT   |       |     Token: 0x34
    |       |       |  Uri-Path: lock
-   |       |       |   Payload: 1 (Unlock)
+   |       |       |   Payload: 0 (Unlock)
    |       |       |
    |       X <-----+      Code: 2.04 (Changed)
    |       |  2.04 |     Token: 0x34
