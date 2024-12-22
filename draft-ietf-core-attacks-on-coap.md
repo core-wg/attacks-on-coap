@@ -833,5 +833,5 @@ The authors would like to thank
 {{{Sandeep Kumar}}},
 {{{András Méhes}}},
 and
-{{{Jon Swallow}}}
+{{{Jon Shallow}}}
 for their valuable comments and feedback.
