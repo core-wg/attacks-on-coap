@@ -885,7 +885,7 @@ Appendix A.  Change log
 
    This section is to be removed before publishing as an RFC.
 
-   Changes from -04 to -05:
+   Changes from -05 to -06:
 
    *  Keep alive
 
