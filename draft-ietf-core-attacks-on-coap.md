@@ -802,7 +802,7 @@ This document has no actions for IANA.
 
 Changes from -04 to -05:
 
-* Keep alive
+* Keep alive.
 
 Changes from -04 to -05:
 
