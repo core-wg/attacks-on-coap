@@ -802,6 +802,10 @@ This document has no actions for IANA.
 
 Changes from -04 to -05:
 
+* Keep alive
+
+Changes from -04 to -05:
+
 * Updated reference to EDHOC which is now RFC 9528
 
 Changes from -03 to -04:
