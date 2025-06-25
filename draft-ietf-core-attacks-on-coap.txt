@@ -5,10 +5,10 @@
 Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               J. Fornehed
 Intended status: Informational                               G. Selander
-Expires: 25 August 2024                                     F. Palombini
+Expires: 27 December 2025                                   F. Palombini
                                                                 Ericsson
                                                                C. Amsüss
-                                                        22 February 2024
+                                                            25 June 2025
 
 
          Attacks on the Constrained Application Protocol (CoAP)
@@ -59,11 +59,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 August 2024.
+   This Internet-Draft will expire on 27 December 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -397,19 +397,19 @@ Table of Contents
    authentication.
 
    Requiring a fresh client authentication (such as a new TLS/DTLS
-   handshake or an EDHOC key exchange [I-D.ietf-lake-edhoc]) mitigates
-   the problem, but requires larger messages and more processing than a
-   dedicated solution.  Security solutions based on exchanging
-   timestamps require exactly synchronized time between client and
-   server, and this may be hard to control with complications such as
-   time zones and daylight saving.  Wall clock time is not monotonic,
-   may reveal that the endpoints will accept expired certificates, or
-   reveal the endpoint's location.  Use of non-monotonic clocks is
-   problematic as the server will accept requests if the clock is moved
-   backward and reject requests if the clock is moved forward.  Even if
-   the clocks are synchronized at one point in time, they may easily get
-   out-of-sync and an attacker may even be able to affect the client or
-   the server time in various ways such as setting up a fake NTP server,
+   handshake or an EDHOC key exchange [RFC9528]) mitigates the problem,
+   but requires larger messages and more processing than a dedicated
+   solution.  Security solutions based on exchanging timestamps require
+   exactly synchronized time between client and server, and this may be
+   hard to control with complications such as time zones and daylight
+   saving.  Wall clock time is not monotonic, may reveal that the
+   endpoints will accept expired certificates, or reveal the endpoint's
+   location.  Use of non-monotonic clocks is problematic as the server
+   will accept requests if the clock is moved backward and reject
+   requests if the clock is moved forward.  Even if the clocks are
+   synchronized at one point in time, they may easily get out-of-sync
+   and an attacker may even be able to affect the client or the server
+   time in various ways such as setting up a fake NTP server,
    broadcasting false time signals to radio-controlled clocks, or
    exposing one of them to a strong gravity field.  As soon as client
    falsely believes it is time synchronized with the server, delay
@@ -478,7 +478,7 @@ Table of Contents
                  +-----> X       |      Code: 0.03 (PUT)
                  | PUT   |       |     Token: 0x77
                  |       |       |  Uri-Path: lock
-                 |       |       |   Payload: 0 (Lock)
+                 |       |       |   Payload: 1 (Lock)
                  |       |       |
                  |<------@       |      Code: 2.04 (Changed)
                  |  2.04 |       |     Token: 0x77
@@ -512,7 +512,7 @@ Table of Contents
                  +-------------->|      Code: 0.03 (PUT)
                  | PUT   |       |     Token: 0x34
                  |       |       |  Uri-Path: lock
-                 |       |       |   Payload: 1 (Unlock)
+                 |       |       |   Payload: 0 (Unlock)
                  |       |       |
                  |       X <-----+      Code: 2.04 (Changed)
                  |       |  2.04 |     Token: 0x34
@@ -817,20 +817,13 @@ Table of Contents
 
 5.  Informative References
 
-   [I-D.ietf-lake-edhoc]
-              Selander, G., Mattsson, J. P., and F. Palombini,
-              "Ephemeral Diffie-Hellman Over COSE (EDHOC)", Work in
-              Progress, Internet-Draft, draft-ietf-lake-edhoc-23, 22
-              January 2024, <https://datatracker.ietf.org/doc/html/
-              draft-ietf-lake-edhoc-23>.
-
    [I-D.irtf-t2trg-amplification-attacks]
               Mattsson, J. P., Selander, G., and C. Amsüss,
               "Amplification Attacks Using the Constrained Application
               Protocol (CoAP)", Work in Progress, Internet-Draft, draft-
-              irtf-t2trg-amplification-attacks-03, 21 February 2024,
+              irtf-t2trg-amplification-attacks-05, 18 June 2025,
               <https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-
-              amplification-attacks-03>.
+              amplification-attacks-05>.
 
    [NIST-ZT]  National Institute of Standards and Technology, "Zero
               Trust Architecture", August 2020,
@@ -883,9 +876,26 @@ Table of Contents
               Robust Transmission", RFC 9177, DOI 10.17487/RFC9177,
               March 2022, <https://www.rfc-editor.org/rfc/rfc9177>.
 
+   [RFC9528]  Selander, G., Preuß Mattsson, J., and F. Palombini,
+              "Ephemeral Diffie-Hellman Over COSE (EDHOC)", RFC 9528,
+              DOI 10.17487/RFC9528, March 2024,
+              <https://www.rfc-editor.org/rfc/rfc9528>.
+
 Appendix A.  Change log
 
    This section is to be removed before publishing as an RFC.
+
+   Changes from -04 to -05:
+
+   *  Keep alive.
+
+   Changes from -04 to -05:
+
+   *  Updated reference to EDHOC which is now RFC 9528
+
+   Changes from -03 to -04:
+
+   *  Rewritten abstract
 
    Changes from -02 to -03:
 
@@ -912,7 +922,7 @@ Acknowledgements
 
    The authors would like to thank Carsten Bormann, Mohamed Boucadair,
    Klaus Hartke, Jaime Jiménez, Ari Keränen, Matthias Kovatsch, Achim
-   Kraus, Sandeep Kumar, András Méhes, and Jon Swallow for their
+   Kraus, Sandeep Kumar, András Méhes, and Jon Shallow for their
    valuable comments and feedback.
 
 Authors' Addresses
