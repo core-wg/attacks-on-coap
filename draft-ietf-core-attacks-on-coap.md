@@ -800,7 +800,7 @@ This document has no actions for IANA.
 # Change log
 {: removeInRFC="true"}
 
-Changes from -04 to -05:
+Changes from -05 to -06:
 
 * Keep alive
 
