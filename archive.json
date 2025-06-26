@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-06-18T01:26:25.442628+00:00",
+  "timestamp": "2025-06-26T00:41:48.855870+00:00",
   "repo": "core-wg/attacks-on-coap",
   "labels": [
     {
@@ -393,13 +393,47 @@
       "state": "OPEN",
       "author": "mrdeep1",
       "authorAssociation": "NONE",
-      "assignees": [],
+      "assignees": [
+        "chrysn"
+      ],
       "labels": [],
       "body": "> 2.4.1. Completing an Operation with an Earlier Final Block\r\n> Depending on the server's capabilities and setup, either of four outcomes could have occurred:\r\n\r\nOnly 3 outcomes are described. I suspect the Request-Tag rejection is the forth.\r\n\r\ns/Jon Swallow/Jon Shallow/",
       "createdAt": "2023-06-14T08:47:25Z",
-      "updatedAt": "2023-06-14T08:47:25Z",
+      "updatedAt": "2024-12-22T12:22:41Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "s/Jon Swallow/Jon Shallow/ is now fixed in main\r\n\r\nI let @chrysn fix the rest",
+          "createdAt": "2024-12-22T12:22:40Z",
+          "updatedAt": "2024-12-22T12:22:40Z"
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "id": "I_kwDOHUICes6AUbts",
+      "title": "typo in payload (lock := 1, unlock := 0)?",
+      "url": "https://github.com/core-wg/attacks-on-coap/issues/13",
+      "state": "CLOSED",
+      "author": "boaks",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "[Payload: 0 (Lock)](https://github.com/core-wg/attacks-on-coap/blob/main/draft-ietf-core-attacks-on-coap.md?plain=1#L468)\r\n\r\n```\r\n   |       |       |   Payload: 0 (Lock)\r\n```\r\n\r\nGuess it should be \r\n\r\n```\r\n   |       |       |   Payload: 1 (Lock)\r\n```\r\n\r\nalso\r\n\r\n[Payload: 1 (Unlock)](https://github.com/core-wg/attacks-on-coap/blob/main/draft-ietf-core-attacks-on-coap.md?plain=1#L501) maybe \"Payload: 0 (Unlock)\".\r\n",
+      "createdAt": "2024-02-25T16:28:16Z",
+      "updatedAt": "2024-12-22T12:20:05Z",
+      "closedAt": "2024-12-22T12:20:05Z",
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "Fixed in main",
+          "createdAt": "2024-12-22T12:20:05Z",
+          "updatedAt": "2024-12-22T12:20:05Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -464,24 +498,26 @@
       "id": "PR_kwDOHUICes5TKwe1",
       "title": "Some minor edits to the abstract",
       "url": "https://github.com/core-wg/attacks-on-coap/pull/11",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "boucadair",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-06-16T08:48:16Z",
-      "updatedAt": "2023-06-16T08:48:16Z",
+      "updatedAt": "2024-02-22T05:43:19Z",
       "baseRepository": "core-wg/attacks-on-coap",
       "baseRefName": "main",
       "baseRefOid": "d5f6ab2a0249f553fc47a0aae642b9e36ffd12e4",
       "headRepository": "boucadair/attacks-on-coap",
       "headRefName": "main",
       "headRefOid": "ec2753d85250b02eb8edde420da4dd9d5df0b65f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2024-02-22T05:43:19Z",
+      "mergedAt": "2024-02-22T05:43:19Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "02540c8e43d9a64593b29d5b5f8c58087ef997b5"
+      },
       "comments": [],
       "reviews": []
     },
@@ -492,12 +528,12 @@
       "url": "https://github.com/core-wg/attacks-on-coap/pull/12",
       "state": "OPEN",
       "author": "boucadair",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "I guess this will need to be reassessed based on the progress of the spec, but I think at least the following RFCs have to be listed as normative",
       "createdAt": "2023-06-16T08:53:59Z",
-      "updatedAt": "2023-06-16T08:53:59Z",
+      "updatedAt": "2024-02-22T07:50:27Z",
       "baseRepository": "core-wg/attacks-on-coap",
       "baseRefName": "main",
       "baseRefOid": "d5f6ab2a0249f553fc47a0aae642b9e36ffd12e4",
@@ -508,7 +544,22 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "MEMBER",
+          "body": "I don't have any strong opinions, but I think we got a comment that we should not have any normative references in the informative documents. If 9175 is nomative, likely OSCORE and DTLS, and block drafts should be as well...",
+          "createdAt": "2024-02-22T05:51:45Z",
+          "updatedAt": "2024-02-22T05:51:45Z"
+        },
+        {
+          "author": "boucadair",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> that we should not have any normative references in the informative documents.\r\n\r\nHmm, please see https://www.ietf.org/about/groups/iesg/statements/normative-informative-references/, especially this part:\r\n\r\n> Note 3: The normative/informative distinction is relevant in any document that amounts to a technical specification, even if its intended status is Experimental or Informational. ",
+          "createdAt": "2024-02-22T07:50:26Z",
+          "updatedAt": "2024-02-22T07:50:26Z"
+        }
+      ],
       "reviews": []
     }
   ]
